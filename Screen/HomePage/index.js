@@ -12,10 +12,10 @@ export default function HomePage({ navigation }) {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.texto}>Bem Vindo ao Quiz Maluco</Text>
+            <Text style={styles.texto}>Bem Vindo ao DataWave!</Text>
             <Text></Text><Text></Text>
-            <TouchableOpacity style={styles.botao} onPress={() => navigation.navigate('ScreenThemes')}> 
-                <Text style={styles.texto}>Comece o jogo aqui</Text>
+            <TouchableOpacity style={styles.botao} onPress={() => navigation.navigate('DataInputScreen')}> 
+                <Text style={styles.texto}>Bora sufar nessa onda</Text>
             </TouchableOpacity>
             <StatusBar style="auto" />
         </View>
