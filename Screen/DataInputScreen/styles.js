@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   texto: {
-    fontSize: 30,
+    fontSize: 20,
   },
   botao: {
     width: "90%",
@@ -18,7 +18,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 10,
   },
 });
 
