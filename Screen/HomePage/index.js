@@ -2,9 +2,11 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { useEffect } from "react";
 import styles from "./styles.js";
+import * as ScreenOrientation from 'expo-screen-orientation';
 
 export default function HomePage({ navigation }) {
   useEffect(() => {
+    ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
     return () => {
       console.log("Finalizando tela: HomePage");
     };
