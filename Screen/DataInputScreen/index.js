@@ -3,39 +3,97 @@ import { Text, View, TouchableOpacity } from "react-native";
 import { useEffect } from "react";
 import * as ScreenOrientation from 'expo-screen-orientation';
 import styles from "./styles.js";
+import React, { useState } from 'react';
+import { LineChart } from 'react-native-chart-kit';
 
 export default function DataImputScreen({ navigation }) {
   useEffect(() => {
-
+    
+    
     // Trava a orientação em modo paisagem
     ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
     
     console.log(
       "Entrando na Tela de entrada de dados para efetuar os cálculos"
     );
+    
+    geraOndaQuadrada();
+
     return () => {
       console.log(
         "Finalizando tela: Tela de entrada de dados para efetuar os cálculos"
       );
-      // Destrava a orientação ao sair da tela
+      // Destrava a orientação da tela
       ScreenOrientation.unlockAsync();
       
     };
   }, []);
 
+  //Seguindo o jupyter notebook "Geração do Sinal Emitido"
+  const[intervaloInicial,setIntervaloInicial] = useState(-3); // t0
+  const[intervaloFinal,setIntervaloFinal] = useState(3); //tf
+  const[passo,setPasso]= useState(0.1);  //passo
+  const[frequenciaFundamental, setFrequenciaFundamental] = useState(1); //f0
+  const[coordX,setCoordX] = useState([]); //coordenada de X
+  const[coordY,setCoordY] = useState([]); //coordenada de Y
+
+
+  const geraOndaQuadrada = () => {
+    try{
+      for (let i = intervaloInicial; i < intervaloFinal; i += passo){
+        coordY.push(Math.sign(Math.sin(2 * Math.PI * frequenciaFundamental * i))); 
+        coordX.push(i);
+      }
+      setCoordX(coordX);
+      setCoordY(coordY);
+    }
+    catch(e){
+      console.log("Erro:",e);
+    }
+    finally{
+      console.log("Coordenadas de Y:", coordY);
+      console.log("Coordenadas de X:", coordX);
+    }
+  }
+
   return (
     <View style={styles.container}>
-      <Text style={styles.texto}>
-        Você está na Tela de entrada de dados para efetuar os cálculos!
-      </Text>
-      <Text></Text>
-      <Text></Text>
-      <TouchableOpacity
+
+    <View>
+    <LineChart
+          data={{
+            labels: coordX.map(String), 
+            datasets: [
+              {
+                data: coordY,
+              },
+            ],
+          }}
+          width={800}  
+          height={300} 
+          chartConfig={{
+            backgroundColor: '#ffffff',
+            backgroundGradientFrom: '#ffffff',
+            backgroundGradientTo: '#ffffff',
+            color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`,
+            labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+            style: {
+              borderRadius: 16,
+            },
+          }}
+          style={{
+            marginVertical: 8,
+
+          }}
+        />
+    </View>
+
+      {/* <TouchableOpacity
         style={styles.botao}
         onPress={() => navigation.navigate("HomePage")}
       >
         <Text style={styles.texto}>Voltar para a Home</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <StatusBar style="auto" />
     </View>
   );

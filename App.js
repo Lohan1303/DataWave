@@ -18,6 +18,11 @@ npx expo install @react-navigation/native
 npx expo install react-native-screens react-native-safe-area-context
 npx expo install @react-navigation/drawer
 npx expo install react-native-gesture-handler react-native-reanimated
+npm install mathjs
+npm install react-native-svg
+npm install react-native-chart-kit
+
+
 */
 
 const Drawer = createDrawerNavigator();
