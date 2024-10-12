@@ -7,9 +7,7 @@ import React, { useState } from 'react';
 import { LineChart } from 'react-native-chart-kit';
 
 export default function DataImputScreen({ navigation }) {
-  useEffect(() => {
-    
-    
+  useEffect(() => {    
     // Trava a orientação em modo paisagem
     ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
     
@@ -32,7 +30,7 @@ export default function DataImputScreen({ navigation }) {
   //Seguindo o jupyter notebook "Geração do Sinal Emitido"
   const[intervaloInicial,setIntervaloInicial] = useState(-3); // t0
   const[intervaloFinal,setIntervaloFinal] = useState(3); //tf
-  const[passo,setPasso]= useState(0.1);  //passo
+  const[passo,setPasso]= useState(0.01);  //passo
   const[frequenciaFundamental, setFrequenciaFundamental] = useState(1); //f0
   const[coordX,setCoordX] = useState([]); //coordenada de X
   const[coordY,setCoordY] = useState([]); //coordenada de Y
@@ -44,8 +42,6 @@ export default function DataImputScreen({ navigation }) {
         coordY.push(Math.sign(Math.sin(2 * Math.PI * frequenciaFundamental * i))); 
         coordX.push(i);
       }
-      setCoordX(coordX);
-      setCoordY(coordY);
     }
     catch(e){
       console.log("Erro:",e);
@@ -56,10 +52,12 @@ export default function DataImputScreen({ navigation }) {
     }
   }
 
+  
   return (
     <View style={styles.container}>
 
     <View>
+    {/* Documentação: https://www.npmjs.com/package/react-native-chart-kit */}
     <LineChart
           data={{
             labels: coordX.map(String), 
@@ -69,8 +67,9 @@ export default function DataImputScreen({ navigation }) {
               },
             ],
           }}
-          width={800}  
+          width={700}  
           height={300} 
+          withVerticalLabels = {false} //Acho que através desse atributo é possível filtrar os labels 
           chartConfig={{
             backgroundColor: '#ffffff',
             backgroundGradientFrom: '#ffffff',
