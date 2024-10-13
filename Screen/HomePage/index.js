@@ -7,11 +7,13 @@ import * as ScreenOrientation from 'expo-screen-orientation';
 export default function HomePage({ navigation }) {
   useEffect(() => {
     ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
+
     return () => {
       console.log("Finalizando tela: HomePage");
     };
   }, []);
-
+    
+ 
   return (
     <View style={styles.container}>
       <Text style={styles.texto}>Bem Vindo ao DataWave!</Text>

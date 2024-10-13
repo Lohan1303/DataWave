@@ -31,7 +31,7 @@ export default function DataImputScreen({ navigation }) {
   const[intervaloInicial,setIntervaloInicial] = useState(-3); // t0
   const[intervaloFinal,setIntervaloFinal] = useState(3); //tf
   const[passo,setPasso]= useState(0.01);  //passo
-  const[frequenciaFundamental, setFrequenciaFundamental] = useState(1); //f0
+  const[frequenciaFundamental, setFrequenciaFundamental] = useState(0.5); //f0
   const[coordX,setCoordX] = useState([]); //coordenada de X
   const[coordY,setCoordY] = useState([]); //coordenada de Y
 
@@ -47,8 +47,8 @@ export default function DataImputScreen({ navigation }) {
       console.log("Erro:",e);
     }
     finally{
-      console.log("Coordenadas de Y:", coordY);
-      console.log("Coordenadas de X:", coordX);
+      // console.log("Coordenadas de Y:", coordY);
+      // console.log("Coordenadas de X:", coordX);
     }
   }
 
@@ -67,7 +67,7 @@ export default function DataImputScreen({ navigation }) {
               },
             ],
           }}
-          width={700}  
+          width={800}  
           height={300} 
           withVerticalLabels = {false} //Acho que através desse atributo é possível filtrar os labels 
           chartConfig={{
