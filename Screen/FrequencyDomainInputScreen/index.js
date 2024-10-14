@@ -73,7 +73,7 @@ export default function FrequencyDomainInputScreen({ navigation }) {
               },
             ],
           }}
-          width={800}  
+          width={700}  
           height={300} 
           withVerticalLabels = {false} //Acho que através desse atributo é possível filtrar os labels 
           chartConfig={{
