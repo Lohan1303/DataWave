@@ -15,7 +15,8 @@ export default function DataImputScreen({ navigation }) {
       "Entrando na Tela de entrada de dados para efetuar os cálculos"
     );
 
-    geraOndaQuadrada();
+    // geraOndaQuadrada();
+    geraOndaSenoidalRetificada();
 
     return () => {
       console.log(
@@ -33,25 +34,99 @@ export default function DataImputScreen({ navigation }) {
   const [frequenciaFundamental, setFrequenciaFundamental] = useState(0.5); //f0
   const [coordX, setCoordX] = useState([]); //coordenada de X
   const [coordY, setCoordY] = useState([]); //coordenada de Y
+  const[qtdHarmonicas,setQtdHarmonicas] = useState(100);
 
   const geraOndaQuadrada = () => {
     try {
       setCoordY([]);
       setCoordX([]);
-      for (let i = intervaloInicial; i < intervaloFinal; i += passo) {
+      for (let t = intervaloInicial; t < intervaloFinal; t += passo) {
         const coordY = Math.sign(
-          Math.sin(2 * Math.PI * frequenciaFundamental * i)
+          Math.sin(2 * Math.PI * frequenciaFundamental * t)
         );
         setCoordY((prevCoordY) => [...prevCoordY, coordY]);
-        setCoordX((prevCoordx) => [...prevCoordx, i]);
+        setCoordX((prevCoordx) => [...prevCoordx, t]);
       }
     } catch (e) {
       console.log("Erro:", e);
     } finally {
-      // console.log("Coordenadas de Y:", coordY);
-      // console.log("Coordenadas de X:", coordX);
+      console.log("Coordenadas de Y:", coordY);
+      console.log("Coordenadas de X:", coordX);
     }
   };
+
+  const geraOndaDenteSerra = () => { // não estou levando em consideração a fase
+    try {
+      setCoordY([]);
+      setCoordX([]);
+      let A_n;
+      for (let t = intervaloInicial; t <= intervaloFinal; t += passo) {
+        let somaHarmonicas = 0;
+  
+        for (let n = 1; n <= qtdHarmonicas; n++) {
+          
+          A_n = 2 / (n * Math.PI);
+
+          somaHarmonicas += A_n * Math.cos(2 * Math.PI * n * frequenciaFundamental * t);
+        }
+        setCoordY((prevCoordY) => [...prevCoordY, somaHarmonicas]);
+        setCoordX((prevCoordx) => [...prevCoordx, t]);
+      }
+    } catch (e) {
+      console.log("Erro:", e);
+    } finally {
+      console.log("Coordenadas de X:", coordX);
+      console.log("Coordenadas de Y:", coordY);
+    }
+  };
+
+  const geraOndaTriangular = () => { //não estou levando em consideração a fase
+    try {
+      setCoordY([]);
+      setCoordX([]);
+      let A_n;
+      for (let t = intervaloInicial; t <= intervaloFinal; t += passo) {
+        let somaHarmonicas = 0;
+  
+        for (let n = 1; n <= qtdHarmonicas; n ++) {
+          if(n % 2 != 0){
+            A_n = 8 / (Math.pow(Math.PI, 2) * Math.pow(n, 2));
+          }
+          else{
+            A_n = 0;
+          }   
+          somaHarmonicas += A_n * Math.cos(2 * Math.PI * n * t );
+        }
+  
+        setCoordY((prevCoordY) => [...prevCoordY, somaHarmonicas]);
+        setCoordX((prevCoordx) => [...prevCoordx, t]);
+      }
+    } catch (e) {
+      console.log("Erro:", e);
+    } finally {
+      console.log("Coordenadas de X:", coordX);
+      console.log("Coordenadas de Y:", coordY);
+    }
+  };
+  
+  geraOndaSenoidalRetificada =() => {
+    try {
+      setCoordY([]);
+      setCoordX([]);
+      for (let t = intervaloInicial; t <= intervaloFinal; t += passo) {
+        const coordY = Math.abs(Math.sin(2 * Math.PI * frequenciaFundamental * t)) ;
+
+        setCoordY((prevCoordY) => [...prevCoordY, coordY]);
+        setCoordX((prevCoordx) => [...prevCoordx, t]);
+      }
+    } catch (e) {
+      console.log("Erro:", e);
+    } finally {
+      console.log("Coordenadas de X:", coordX);
+      console.log("Coordenadas de Y:", coordY);
+    }
+  };
+  
 
   return (
     <View style={styles.container}>

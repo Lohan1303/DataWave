@@ -21,39 +21,6 @@ export default function FrequencyResponseScreen({ navigation }) {
     };
   }, []);
 
-    //Seguindo o jupyter notebook "Geração do Sinal Emitido"
-    const[intervaloInicial,setIntervaloInicial] = useState(-3); // t0
-    const[intervaloFinal,setIntervaloFinal] = useState(3); //tf
-    const[passo,setPasso]= useState(0.4);  //passo
-    const[frequenciaFundamental, setFrequenciaFundamental] = useState(1); //f0
-    const[coordX,setCoordX] = useState([]); //coordenada de X
-    const[coordY,setCoordY] = useState([]); //coordenada de Y
-    const[qtdHarmonicas,setQtdHarmonicas] = useState(100);
-  
-    const geraOndaDenteSerra = () => { // não estou levando em consideração a fase
-      try {
-        let A_n;
-        for (let t = intervaloInicial; t <= intervaloFinal; t += passo) {
-          let somaHarmonicas = 0;
-    
-          for (let n = 1; n <= qtdHarmonicas; n++) {
-            
-            A_n = 2 / (n * Math.PI);
-
-            somaHarmonicas += A_n * Math.cos(2 * Math.PI * n * frequenciaFundamental * t);
-          }
-          coordX.push(t);
-          coordY.push(somaHarmonicas);
-        }
-      } catch (e) {
-        console.log("Erro:", e);
-      } finally {
-        console.log("Coordenadas de X:", coordX);
-        console.log("Coordenadas de Y:", coordY);
-      }
-    };
-    
-    
 
   return (
     <View style={styles.container}>
