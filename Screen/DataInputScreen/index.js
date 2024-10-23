@@ -55,23 +55,23 @@ export default function DataImputScreen({ navigation }) {
     }
   };
 
-  const geraOndaDenteSerra = () => { // não estou levando em consideração a fase
+ const geraOndaDenteSerra = () => { // não estou levando em consideração a fase
     try {
       setCoordY([]);
       setCoordX([]);
       let A_n;
       for (let t = intervaloInicial; t <= intervaloFinal; t += passo) {
-        let somaHarmonicas = 0;
-  
-        for (let n = 1; n <= qtdHarmonicas; n++) {
-          
-          A_n = 2 / (n * Math.PI);
+      let somaHarmonicas = 0;
 
-          somaHarmonicas += A_n * Math.cos(2 * Math.PI * n * frequenciaFundamental * t);
-        }
-        setCoordY((prevCoordY) => [...prevCoordY, somaHarmonicas]);
-        setCoordX((prevCoordx) => [...prevCoordx, t]);
+      for (let n = 1; n <= qtdHarmonicas; n++) {
+
+        let A_n = (2 * Math.pow(-1, n + 1)) / n;
+        
+        somaHarmonicas += A_n * Math.cos(2 * Math.PI * n * frequenciaFundamental * t);
       }
+      setCoordY((prevCoordY) => [...prevCoordY, somaHarmonicas]);
+      setCoordX((prevCoordX) => [...prevCoordX, t]);
+    }
     } catch (e) {
       console.log("Erro:", e);
     } finally {
