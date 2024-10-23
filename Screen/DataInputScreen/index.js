@@ -55,7 +55,7 @@ export default function DataImputScreen({ navigation }) {
     }
   };
 
-  const geraOndaDenteSerra = () => { // não estou levando em consideração a fase
+ const geraOndaDenteSerra = () => { // não estou levando em consideração a fase
     try {
       setCoordY([]);
       setCoordX([]);
