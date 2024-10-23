@@ -15,9 +15,9 @@ export default function DataImputScreen({ navigation }) {
       "Entrando na Tela de entrada de dados para efetuar os cálculos"
     );
 
+    geraOndaDenteSerra();
+    // geraOndaSenoidalRetificada();
     // geraOndaQuadrada();
-    geraOndaSenoidalRetificada();
-
     return () => {
       console.log(
         "Finalizando tela: Tela de entrada de dados para efetuar os cálculos"
@@ -31,10 +31,10 @@ export default function DataImputScreen({ navigation }) {
   const [intervaloInicial, setIntervaloInicial] = useState(-3); // t0
   const [intervaloFinal, setIntervaloFinal] = useState(3); //tf
   const [passo, setPasso] = useState(0.01); //passo
-  const [frequenciaFundamental, setFrequenciaFundamental] = useState(0.5); //f0
+  const [frequenciaFundamental, setFrequenciaFundamental] = useState(1); //f0
   const [coordX, setCoordX] = useState([]); //coordenada de X
   const [coordY, setCoordY] = useState([]); //coordenada de Y
-  const[qtdHarmonicas,setQtdHarmonicas] = useState(100);
+  const[qtdHarmonicas,setQtdHarmonicas] = useState(300);
 
   const geraOndaQuadrada = () => {
     try {
@@ -61,17 +61,25 @@ export default function DataImputScreen({ navigation }) {
       setCoordX([]);
       let A_n;
       for (let t = intervaloInicial; t <= intervaloFinal; t += passo) {
-        let somaHarmonicas = 0;
-  
-        for (let n = 1; n <= qtdHarmonicas; n++) {
-          
-          A_n = 2 / (n * Math.PI);
+      let somaHarmonicas = 0;
 
-          somaHarmonicas += A_n * Math.cos(2 * Math.PI * n * frequenciaFundamental * t);
-        }
-        setCoordY((prevCoordY) => [...prevCoordY, somaHarmonicas]);
-        setCoordX((prevCoordx) => [...prevCoordx, t]);
+      for (let n = 1; n <= qtdHarmonicas; n++) {
+
+        //let A_n = (2 * Math.pow(-1, n + 1)) / n;
+         let A_n = 2 / (Math.PI * n);
+        somaHarmonicas += -A_n * Math.sin(2 * Math.PI * n * frequenciaFundamental * t);
       }
+
+      // Armazenando os valores em X e Y
+      setCoordY((prevCoordY) => [...prevCoordY, somaHarmonicas]);
+      if(somaHarmonicas < 1 && somaHarmonicas > 0.9)
+      {
+        setCoordX((prevCoordX) => [...prevCoordX, Math.round(t)]);
+      }
+      else {
+        setCoordX((prevCoordX) => [...prevCoordX, '']);
+      }
+    }
     } catch (e) {
       console.log("Erro:", e);
     } finally {
@@ -158,8 +166,12 @@ export default function DataImputScreen({ navigation }) {
               marginVertical: 8,
             }}
             withInnerLines={true}
-            withVerticalLabels={false} //Acho que através desse atributo é possível filtrar os labels
-          />
+            withVerticalLabels={true} //Acho que através desse atributo é possível filtrar os labels
+          >
+          </LineChart>
+            <View style={{ borderColor: 2, border: 2, width: 100 }}>
+
+            </View>
         </View>
       )}
 
