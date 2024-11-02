@@ -14,9 +14,10 @@ export default function DataImputScreen({ navigation }) {
     console.log(
       "Entrando na Tela de entrada de dados para efetuar os cálculos"
     );
-      geraOndaSenoidalRetificada();
-    // geraOndaDenteSerra();
+
     // geraOndaSenoidalRetificada();
+    // geraOndaDenteSerra();
+    geraOndaTriangular();
     // geraOndaQuadrada();
     return () => {
       console.log(
@@ -28,10 +29,10 @@ export default function DataImputScreen({ navigation }) {
   }, []);
 
   //Seguindo o jupyter notebook "Geração do Sinal Emitido"
-  const [intervaloInicial, setIntervaloInicial] = useState(-3); // t0
-  const [intervaloFinal, setIntervaloFinal] = useState(3); //tf
+  const [intervaloInicial, setIntervaloInicial] = useState(-10); // t0
+  const [intervaloFinal, setIntervaloFinal] = useState(5); //tf
   const [passo, setPasso] = useState(0.01); //passo
-  const [frequenciaFundamental, setFrequenciaFundamental] = useState(1); //f0
+  const [frequenciaFundamental, setFrequenciaFundamental] = useState(0.5); //f0
   const [coordX, setCoordX] = useState([]); //coordenada de X
   const [coordY, setCoordY] = useState([]); //coordenada de Y
   const [qtdHarmonicas, setQtdHarmonicas] = useState(300);
@@ -110,7 +111,7 @@ export default function DataImputScreen({ navigation }) {
       let A_n;
       for (let t = intervaloInicial; t <= intervaloFinal; t += passo) {
         let somaHarmonicas = 0;
-
+        const periodo = 1 / ( frequenciaFundamental); // Cálculo do período da onda
         for (let n = 1; n <= qtdHarmonicas; n++) {
           if (n % 2 != 0) {
             A_n = 8 / (Math.pow(Math.PI, 2) * Math.pow(n, 2));
@@ -121,7 +122,13 @@ export default function DataImputScreen({ navigation }) {
         }
 
         setCoordY((prevCoordY) => [...prevCoordY, somaHarmonicas]);
-        setCoordX((prevCoordx) => [...prevCoordx, t]);
+        if((Math.abs(t) % periodo) < passo)
+        {
+          setCoordX((prevCoordx) => [...prevCoordx, t.toFixed(1)]);
+        }
+        else{
+          setCoordX((prevCoordx) => [...prevCoordx, '']);
+        }
       }
     } catch (e) {
       console.log("Erro:", e);
