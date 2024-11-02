@@ -14,8 +14,8 @@ export default function DataImputScreen({ navigation }) {
     console.log(
       "Entrando na Tela de entrada de dados para efetuar os cálculos"
     );
-
-    geraOndaDenteSerra();
+      geraOndaSenoidalRetificada();
+    // geraOndaDenteSerra();
     // geraOndaSenoidalRetificada();
     // geraOndaQuadrada();
     return () => {
@@ -28,10 +28,10 @@ export default function DataImputScreen({ navigation }) {
   }, []);
 
   //Seguindo o jupyter notebook "Geração do Sinal Emitido"
-  const [intervaloInicial, setIntervaloInicial] = useState(0); // t0
+  const [intervaloInicial, setIntervaloInicial] = useState(-3); // t0
   const [intervaloFinal, setIntervaloFinal] = useState(3); //tf
   const [passo, setPasso] = useState(0.01); //passo
-  const [frequenciaFundamental, setFrequenciaFundamental] = useState(5); //f0
+  const [frequenciaFundamental, setFrequenciaFundamental] = useState(1); //f0
   const [coordX, setCoordX] = useState([]); //coordenada de X
   const [coordY, setCoordY] = useState([]); //coordenada de Y
   const [qtdHarmonicas, setQtdHarmonicas] = useState(300);
@@ -135,13 +135,19 @@ export default function DataImputScreen({ navigation }) {
     try {
       setCoordY([]);
       setCoordX([]);
+      const meio_periodo = 1 / (2 * frequenciaFundamental); // Cálculo do período da onda
       for (let t = intervaloInicial; t <= intervaloFinal; t += passo) {
         const coordY = Math.abs(
           Math.sin(2 * Math.PI * frequenciaFundamental * t)
         );
-
         setCoordY((prevCoordY) => [...prevCoordY, coordY]);
-        setCoordX((prevCoordx) => [...prevCoordx, t]);
+        if((Math.abs(t) % meio_periodo) < passo)
+        {
+          setCoordX((prevCoordx) => [...prevCoordx, t.toFixed(1)]);
+        }
+        else{
+          setCoordX((prevCoordx) => [...prevCoordx, '']);
+        }
       }
     } catch (e) {
       console.log("Erro:", e);
@@ -182,6 +188,7 @@ export default function DataImputScreen({ navigation }) {
             }}
             withInnerLines={true}
             withVerticalLabels={true} //Acho que através desse atributo é possível filtrar os labels
+            xLabelsOffset={-5}
           ></LineChart>
           <View style={{ borderColor: 2, border: 2, width: 100 }}></View>
         </View>
