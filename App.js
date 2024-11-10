@@ -9,7 +9,7 @@ import DataImputScreen from "./Screen/DataInputScreen";
 import FrequencyDomainInputScreen from "./Screen/FrequencyDomainInputScreen";
 import FrequencyResponseScreen from "./Screen/FrequencyResponseScreen";
 import ImpulseResponseScreen from "./Screen/ImpulseResponseScreen";
-import OutputSpectrumScreen from "./Screen/OutputSpectrumScreen";
+import FrequencyDomainOutputScreen from "./Screen/FrequencyDomainOutputScreen";
 import TimeDomainInputScreen from "./Screen/TimeDomainInputScreen";
 import TimeDomaOutputScreen from "./Screen/TimeDomainOutputScreen";
 
@@ -60,8 +60,8 @@ export default function App() {
           options={{ title: "Impulse Response Screen", headerShown: false }}
         />
         <Drawer.Screen
-          name="OutputSpectrumScreen"
-          component={OutputSpectrumScreen}
+          name="FrequencyDomainOutputScreen"
+          component={FrequencyDomainOutputScreen}
           options={{ title: "Output Spectrum Screen", headerShown: false }}
         />
         <Drawer.Screen
