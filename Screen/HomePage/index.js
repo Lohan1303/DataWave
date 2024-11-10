@@ -21,7 +21,7 @@ export default function HomePage({ navigation }) {
       <Text></Text>
       <TouchableOpacity
         style={styles.botao}
-        onPress={() => navigation.navigate("DataInputScreen")}
+        onPress={() => navigation.navigate("FrequencyDomainInputScreen")}
       >
         <Text style={styles.texto}>Bora sufar nessa onda</Text>
       </TouchableOpacity>

@@ -15,10 +15,10 @@ export default function DataImputScreen({ navigation }) {
       "Entrando na Tela de entrada de dados para efetuar os cálculos"
     );
 
-    geraOndaSenoidalRetificada();
+    // geraOndaSenoidalRetificada();
     // geraOndaDenteSerra();
     // geraOndaTriangular();
-    // geraOndaQuadrada();
+    geraOndaQuadrada();
     return () => {
       console.log(
         "Finalizando tela: Tela de entrada de dados para efetuar os cálculos"
@@ -46,7 +46,7 @@ export default function DataImputScreen({ navigation }) {
       for (let t = intervaloInicial; t < intervaloFinal; t += passo) {
         // Aplicando a fase na fórmula do seno
         const coordY = Math.sign(
-          Math.sin(2 * Math.PI * frequenciaFundamental * t - (Math.PI * fase)) // Fase aplicada
+          Math.sin(2 * Math.PI * frequenciaFundamental * t ) // Fase aplicada
         );
 
         // Acumulando coordenadas de Y
@@ -176,7 +176,7 @@ export default function DataImputScreen({ navigation }) {
       const meio_periodo = 1 / (2 * frequenciaFundamental); // Cálculo do meio período
 
       for (let t = intervaloInicial; t <= intervaloFinal; t += passo) {
-        const coordY = Math.abs(Math.sin(2 * Math.PI * frequenciaFundamental * t + (Math.PI / 2))); // Cálculo de Y
+        const coordY = Math.abs(Math.sin(2 * Math.PI * frequenciaFundamental * t )); // Cálculo de Y
         setCoordY((prevCoordY) => [...prevCoordY, coordY]); // Atualiza o array de coordenadas Y
 
 
@@ -230,8 +230,8 @@ export default function DataImputScreen({ navigation }) {
               marginVertical: 8,
             }}
             withVerticalLabels={true}
-            withShadow={false}
-            withInnerLines={false}
+            withShadow={true}
+            withInnerLines={true}
             withOuterLines={false}
             withVerticalLines={false}
             withHorizontalLines={false}
