@@ -12,7 +12,7 @@ import ImpulseResponseScreen from "./Screen/ImpulseResponseScreen";
 import FrequencyDomainOutputScreen from "./Screen/FrequencyDomainOutputScreen";
 import TimeDomainInputScreen from "./Screen/TimeDomainInputScreen";
 import TimeDomaOutputScreen from "./Screen/TimeDomainOutputScreen";
-
+import { DataProvider } from "./context/DataContext";
 /* Pacotes para instalar: 
 npx expo install @react-navigation/native
 npx expo install react-native-screens react-native-safe-area-context
@@ -29,52 +29,54 @@ const Drawer = createDrawerNavigator();
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Drawer.Navigator initialRouteName="HomePage">
-        <Drawer.Screen
-          name="HomePage"
-          component={Home}
-          options={{ title: "Home" }}
-        />
-        <Drawer.Screen
-          name="DataInputScreen"
-          component={DataImputScreen}
-          options={{ title: "Data ImputScreen", headerShown: false }}
-        />
-        <Drawer.Screen
-          name="FrequencyDomainInputScreen"
-          component={FrequencyDomainInputScreen}
-          options={{
-            title: "Frequency DomainInput Screen",
-            headerShown: false,
-          }}
-        />
-        <Drawer.Screen
-          name="FrequencyResponseScreen"
-          component={FrequencyResponseScreen}
-          options={{ title: "Frequency Response Screen", headerShown: false }}
-        />
-        <Drawer.Screen
-          name="ImpulseResponseScreen"
-          component={ImpulseResponseScreen}
-          options={{ title: "Impulse Response Screen", headerShown: false }}
-        />
-        <Drawer.Screen
-          name="FrequencyDomainOutputScreen"
-          component={FrequencyDomainOutputScreen}
-          options={{ title: "Output Spectrum Screen", headerShown: false }}
-        />
-        <Drawer.Screen
-          name="TimeDomainInputScreen"
-          component={TimeDomainInputScreen}
-          options={{ title: "Time Domain Input Screen", headerShown: false }}
-        />
-        <Drawer.Screen
-          name="TimeDomainOutputScreen"
-          component={TimeDomaOutputScreen}
-          options={{ title: "Time Domain Output Screen", headerShown: false }}
-        />
-      </Drawer.Navigator>
-    </NavigationContainer>
+    <DataProvider>
+      <NavigationContainer>
+        <Drawer.Navigator initialRouteName="HomePage">
+          <Drawer.Screen
+            name="HomePage"
+            component={Home}
+            options={{ title: "Home" }}
+          />
+          <Drawer.Screen
+            name="DataInputScreen"
+            component={DataImputScreen}
+            options={{ title: "Data ImputScreen", headerShown: false }}
+          />
+          <Drawer.Screen
+            name="FrequencyDomainInputScreen"
+            component={FrequencyDomainInputScreen}
+            options={{
+              title: "Frequency DomainInput Screen",
+              headerShown: false,
+            }}
+          />
+          <Drawer.Screen
+            name="FrequencyResponseScreen"
+            component={FrequencyResponseScreen}
+            options={{ title: "Frequency Response Screen", headerShown: false }}
+          />
+          <Drawer.Screen
+            name="ImpulseResponseScreen"
+            component={ImpulseResponseScreen}
+            options={{ title: "Impulse Response Screen", headerShown: false }}
+          />
+          <Drawer.Screen
+            name="FrequencyDomainOutputScreen"
+            component={FrequencyDomainOutputScreen}
+            options={{ title: "Output Spectrum Screen", headerShown: false }}
+          />
+          <Drawer.Screen
+            name="TimeDomainInputScreen"
+            component={TimeDomainInputScreen}
+            options={{ title: "Time Domain Input Screen", headerShown: false }}
+          />
+          <Drawer.Screen
+            name="TimeDomainOutputScreen"
+            component={TimeDomaOutputScreen}
+            options={{ title: "Time Domain Output Screen", headerShown: false }}
+          />
+        </Drawer.Navigator>
+      </NavigationContainer>
+    </DataProvider>
   );
 }
