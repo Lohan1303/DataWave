@@ -16,9 +16,9 @@ export default function DataImputScreen({ navigation }) {
     );
 
     // geraOndaSenoidalRetificada();
-    // geraOndaDenteSerra();
+    geraOndaDenteSerra();
     // geraOndaTriangular();
-    geraOndaQuadrada();
+    // geraOndaQuadrada();
     return () => {
       console.log(
         "Finalizando tela: Tela de entrada de dados para efetuar os cálculos"
@@ -36,31 +36,28 @@ export default function DataImputScreen({ navigation }) {
   const [coordX, setCoordX] = useState([]); //coordenada de X
   const [coordY, setCoordY] = useState([]); //coordenada de Y
   const [qtdHarmonicas, setQtdHarmonicas] = useState(300);
-  const [fase,setFase] = useState(0.5);
+  const [fase,setFase] = useState(1);
+
   const geraOndaQuadrada = () => {
     try {
       const novasCoordX = [];
       const novasCoordY = [];
+      const periodo = (1 / (frequenciaFundamental)); // Cálculo do período da onda
   
-      // Loop para gerar as coordenadas
       for (let t = intervaloInicial; t < intervaloFinal; t += passo) {
-
+        // Aplicando a fase na fórmula do seno
         const coordY = Math.sign(
-          Math.sin(2 * Math.PI * frequenciaFundamental * t + (fase * Math.PI)) // Fase aplicada
+          Math.sin(2 * Math.PI * frequenciaFundamental * t - (Math.PI * fase)) // Fase aplicada
         );
-    
-        // Armazenando coordY
+  
+        // Acumulando coordenadas de Y
         novasCoordY.push(coordY);
   
-     
-        const proximaCoordY = Math.sign(
-          Math.sin(2 * Math.PI * frequenciaFundamental * (t + passo) + (fase * Math.PI))
-        );
-        
-        if (coordY > proximaCoordY) {
-          novasCoordX.push(t.toFixed(2)); 
+        // Verificando quando a onda atinge zero (ou outro ponto desejado) para coordX
+        if (Math.abs(t).toFixed(5) % periodo < passo) {
+          novasCoordX.push(t.toFixed(2)); // Adicionando a coordenada X
         } else {
-          novasCoordX.push(""); 
+          novasCoordX.push(""); // Caso contrário, deixar em branco
         }
       }
   
@@ -75,6 +72,7 @@ export default function DataImputScreen({ navigation }) {
       console.log("Coordenadas de X:", coordX);
     }
   };
+  
   
   const geraOndaDenteSerra = () => {
     // não estou levando em consideração a fase
@@ -129,10 +127,10 @@ export default function DataImputScreen({ navigation }) {
       setCoordY([]);
       setCoordX([]);
       let A_n;
-      
+      const periodo = 1 / frequenciaFundamental; // Cálculo do período da onda
       for (let t = intervaloInicial; t <= intervaloFinal; t += passo) {
         let somaHarmonicas = 0;
-        const periodo = 1 / frequenciaFundamental; // Cálculo do período da onda
+
         for (let n = 1; n <= qtdHarmonicas; n++) {
           if (n % 2 != 0) {
             A_n = 8 / (Math.pow(Math.PI, 2) * Math.pow(n, 2));
