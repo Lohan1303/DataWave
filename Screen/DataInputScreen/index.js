@@ -15,8 +15,8 @@ export default function DataImputScreen({ navigation }) {
       "Entrando na Tela de entrada de dados para efetuar os cálculos"
     );
 
-    // geraOndaSenoidalRetificada();
-    geraOndaDenteSerra();
+    geraOndaSenoidalRetificada();
+    // geraOndaDenteSerra();
     // geraOndaTriangular();
     // geraOndaQuadrada();
     return () => {
@@ -36,23 +36,22 @@ export default function DataImputScreen({ navigation }) {
   const [coordX, setCoordX] = useState([]); //coordenada de X
   const [coordY, setCoordY] = useState([]); //coordenada de Y
   const [qtdHarmonicas, setQtdHarmonicas] = useState(300);
-  const [fase,setFase] = useState(1);
 
   const geraOndaQuadrada = () => {
     try {
       const novasCoordX = [];
       const novasCoordY = [];
       const periodo = (1 / (frequenciaFundamental)); // Cálculo do período da onda
-  
+
       for (let t = intervaloInicial; t < intervaloFinal; t += passo) {
         // Aplicando a fase na fórmula do seno
         const coordY = Math.sign(
           Math.sin(2 * Math.PI * frequenciaFundamental * t - (Math.PI * fase)) // Fase aplicada
         );
-  
+
         // Acumulando coordenadas de Y
         novasCoordY.push(coordY);
-  
+
         // Verificando quando a onda atinge zero (ou outro ponto desejado) para coordX
         if (Math.abs(t).toFixed(5) % periodo < passo) {
           novasCoordX.push(t.toFixed(2)); // Adicionando a coordenada X
@@ -60,11 +59,11 @@ export default function DataImputScreen({ navigation }) {
           novasCoordX.push(""); // Caso contrário, deixar em branco
         }
       }
-  
+
       // Atualizando o estado após o loop
       setCoordY(novasCoordY);
       setCoordX(novasCoordX);
-  
+
     } catch (e) {
       console.log("Erro:", e);
     } finally {
@@ -72,43 +71,40 @@ export default function DataImputScreen({ navigation }) {
       console.log("Coordenadas de X:", coordX);
     }
   };
-  
-  
+
+
   const geraOndaDenteSerra = () => {
-    // não estou levando em consideração a fase
     try {
       setCoordY([]);
       setCoordX([]);
-      let A_n;
+      const periodo = 1 / frequenciaFundamental;
+
       for (let t = intervaloInicial; t <= intervaloFinal; t += passo) {
         let somaHarmonicas = 0;
-        let somaHarmonicas_1 = 0;
-        let somaHarmonicas_2 = 0;
 
         for (let n = 1; n <= qtdHarmonicas; n++) {
-          //let A_n = (2 * Math.pow(-1, n + 1)) / n;
-          let A_n = 2 / (Math.PI * n);
-          let A_n_1 = 2 / (Math.PI * n - 1);
-          let A_n_2 = 2 / (Math.PI * n + 1);
 
-          somaHarmonicas +=
-            -A_n * Math.sin(2 * Math.PI * n * frequenciaFundamental * t);
-          somaHarmonicas_1 +=
-            -A_n_1 *
-            Math.sin(2 * Math.PI * n * frequenciaFundamental * (t - passo));
-          somaHarmonicas_2 +=
-            -A_n_2 *
-            Math.sin(2 * Math.PI * n * frequenciaFundamental * (t + passo));
+          let A_n = 2 / (Math.PI * n);
+
+
+          let faseHarmonica = 0;
+          if (n % 2 === 0) {
+
+            faseHarmonica = Math.PI / 2;
+          } else {
+
+            faseHarmonica = -Math.PI / 2;
+          }
+
+          // Somando as harmônicas com as fases aplicadas
+          somaHarmonicas += A_n * Math.cos(2 * Math.PI * n * frequenciaFundamental * t + faseHarmonica);
         }
 
-        // Armazenando os valores em X e Y
+        // Armazenando os valores de Y
         setCoordY((prevCoordY) => [...prevCoordY, somaHarmonicas]);
 
-        if (
-          somaHarmonicas_1 > somaHarmonicas &&
-          somaHarmonicas <= somaHarmonicas_2
-        ) {
-          setCoordX((prevCoordX) => [...prevCoordX, (t + passo).toFixed(2)]);
+        if (Math.abs(t).toFixed(5) % (periodo) < passo) {
+          setCoordX((prevCoordX) => [...prevCoordX, (t).toFixed(2)]);
         } else {
           setCoordX((prevCoordX) => [...prevCoordX, ""]);
         }
@@ -121,30 +117,45 @@ export default function DataImputScreen({ navigation }) {
     }
   };
 
+
   const geraOndaTriangular = () => {
-    //não estou levando em consideração a fase
     try {
       setCoordY([]);
       setCoordX([]);
       let A_n;
       const periodo = 1 / frequenciaFundamental; // Cálculo do período da onda
+
       for (let t = intervaloInicial; t <= intervaloFinal; t += passo) {
         let somaHarmonicas = 0;
 
         for (let n = 1; n <= qtdHarmonicas; n++) {
-          if (n % 2 != 0) {
+          // Definindo A_n para harmônicas ímpares
+          if (n % 2 !== 0) {
             A_n = 8 / (Math.pow(Math.PI, 2) * Math.pow(n, 2));
           } else {
-            A_n = 0;
+            A_n = 0; // As harmônicas pares não contribuem
           }
-          somaHarmonicas += A_n * Math.cos(2 * Math.PI * n * t);
+
+          // Calculando a fase de acordo com (n-1)/2
+          let fase = 0;
+          if (((n - 1) / 2) % 2 === 0) {
+            fase = -Math.PI / 2; // Fase de -90° (ou -π/2 radianos) para (n-1)/2 par
+          } else {
+            fase = Math.PI / 2; // Fase de +90° (ou π/2 radianos) para (n-1)/2 ímpar
+          }
+
+          // Somando a harmônica com a fase aplicada
+          somaHarmonicas += A_n * Math.cos(2 * Math.PI * n * frequenciaFundamental * t + fase);
         }
 
+        // Armazenando os valores de Y
         setCoordY((prevCoordY) => [...prevCoordY, somaHarmonicas]);
+
+        // Atualizando coordX com valores em momentos específicos
         if (Math.abs(t).toFixed(5) % periodo < passo) {
-          setCoordX((prevCoordx) => [...prevCoordx, t.toFixed(1)]);
+          setCoordX((prevCoordX) => [...prevCoordX, t.toFixed(1)]);
         } else {
-          setCoordX((prevCoordx) => [...prevCoordx, ""]);
+          setCoordX((prevCoordX) => [...prevCoordX, ""]);
         }
       }
     } catch (e) {
@@ -155,19 +166,20 @@ export default function DataImputScreen({ navigation }) {
     }
   };
 
+
   const geraOndaSenoidalRetificada = () => {
     try {
       setCoordY([]); // Limpa o array de Y
       setCoordX([]); // Limpa o array de X
-  
+
       let cond = false; // Flag para capturar o primeiro zero positivo
       const meio_periodo = 1 / (2 * frequenciaFundamental); // Cálculo do meio período
-  
+
       for (let t = intervaloInicial; t <= intervaloFinal; t += passo) {
-        const coordY = Math.abs(Math.sin(2 * Math.PI * frequenciaFundamental * t)); // Cálculo de Y
+        const coordY = Math.abs(Math.sin(2 * Math.PI * frequenciaFundamental * t + (Math.PI / 2))); // Cálculo de Y
         setCoordY((prevCoordY) => [...prevCoordY, coordY]); // Atualiza o array de coordenadas Y
-  
-        
+
+
         if (Math.abs(t).toFixed(4) % meio_periodo < passo) {
           setCoordX((prevCoordx) => [...prevCoordx, t.toFixed(1)]);
         } else {
@@ -181,7 +193,7 @@ export default function DataImputScreen({ navigation }) {
       console.log("Coordenadas de Y:", coordY);
     }
   };
-  
+
 
   return (
     <View style={styles.container}>
@@ -194,6 +206,11 @@ export default function DataImputScreen({ navigation }) {
               datasets: [
                 {
                   data: coordY,
+                  // Se você não quiser a linha, apenas defina a linha com valores null
+                  // Isso efetivamente "remove" a linha conectando os pontos
+                  withDots: true,
+                  // Adicionar uma condição para não desenhar linhas
+                  lineColor: 'transparent' // ou qualquer valor transparente
                 },
               ],
             }}
@@ -212,10 +229,14 @@ export default function DataImputScreen({ navigation }) {
             style={{
               marginVertical: 8,
             }}
-            withInnerLines={true}
-            withVerticalLabels={true} //Acho que através desse atributo é possível filtrar os labels
+            withVerticalLabels={true}
+            withShadow={false}
+            withInnerLines={false}
+            withOuterLines={false}
+            withVerticalLines={false}
+            withHorizontalLines={false}
             xLabelsOffset={-5}
-          ></LineChart>
+          />
           <View style={{ borderColor: 2, border: 2, width: 100 }}></View>
         </View>
       )}
