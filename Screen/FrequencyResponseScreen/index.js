@@ -70,6 +70,7 @@ export default function FrequencyResponseScreen({ navigation }) {
   useEffect(() => {
     // Bloqueio em modo paisagem, se necessário
     gerar_grafico_fase();
+    // gerar_grafico_modulo();
     ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
   }, []);
 
@@ -86,9 +87,11 @@ export default function FrequencyResponseScreen({ navigation }) {
                 },
               ],
             }}
-            width={Dimensions.get("window").width - 16} // Ajusta para largura da tela
+            width={700} // Ajusta para largura da tela
             height={300}
             withVerticalLabels={true} // Exibe rótulos verticais
+            withShadow={true}
+            withInnerLines={false}
             chartConfig={{
               backgroundColor: "#ffffff",
               backgroundGradientFrom: "#ffffff",

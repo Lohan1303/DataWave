@@ -16,7 +16,12 @@ export default function FrequencyDomainInputScreen({ navigation }) {
     // gera_An_Quadrada();
     // gera_An_Triangular();
     // gera_An_DenteSerra();
-    gera_An_SenRetificada();
+    // gera_An_SenRetificada();
+
+    // gera_Fase_Quadrada();
+    // gera_Fase_Triangular();
+    // gera_Fase_DenteSerra();
+    gera_Fase_SenoideRetificada();
 
 
     ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
@@ -83,8 +88,8 @@ export default function FrequencyDomainInputScreen({ navigation }) {
       let tempCoordY = [];
 
       for (let n = 1; n <= qtdHarmonicas; n++) {
-          tempCoordX.push(n);
-          tempCoordY.push(2 / (Math.PI * n));
+        tempCoordX.push(n);
+        tempCoordY.push(2 / (Math.PI * n));
 
       }
 
@@ -125,7 +130,113 @@ export default function FrequencyDomainInputScreen({ navigation }) {
     }
   };
 
+  const gera_Fase_Quadrada = () => {
+    try {
+      let tempCoordX = [];
+      let tempCoordY = [];
 
+      tempCoordY.push('');
+      tempCoordX.push('');
+      for (let n = 1; n <= qtdHarmonicas; n++) {
+        tempCoordX.push(n);
+        tempCoordY.push(-90); // Fase constante de -90 graus como número
+      }
+
+      setCoordX(tempCoordX);
+      setCoordY(tempCoordY);
+
+    } catch (e) {
+      console.log("Error:", e);
+    } finally {
+      console.log("X Coordinates:", coordX);
+      console.log("Y Coordinates:", coordY);
+    }
+  };
+
+
+  const gera_Fase_Triangular = () => {
+    try {
+      let tempCoordX = [];
+      let tempCoordY = [];
+  
+
+      for (let n = 1; n <= qtdHarmonicas; n++) {
+
+        if (n % 2 === 1) {
+
+          if ((Math.floor(n / 2) % 2) === 0) {
+            tempCoordX.push(n);
+            tempCoordY.push(-90);
+          } else {
+            tempCoordX.push(n);
+            tempCoordY.push(90);
+          }
+        }
+      }
+  
+      setCoordX(tempCoordX);
+      setCoordY(tempCoordY);
+  
+    } catch (e) {
+      console.log("Error:", e);
+    } finally {
+      console.log("X Coordinates:", coordX);
+      console.log("Y Coordinates:", coordY);
+    }
+  };
+  
+  const gera_Fase_DenteSerra = () => {
+    try {
+      let tempCoordX = [];
+      let tempCoordY = [];
+  
+
+      for (let n = 1; n <= qtdHarmonicas; n++) {
+        if(n % 2 === 0) {
+          tempCoordX.push(n);  
+          tempCoordY.push(90);   
+        }else{
+          tempCoordX.push(n);
+          tempCoordY.push(-90);
+        }
+      }
+  
+      setCoordX(tempCoordX);
+      setCoordY(tempCoordY);
+  
+    } catch (e) {
+      console.log("Error:", e);
+    } finally {
+      console.log("X Coordinates:", coordX);
+      console.log("Y Coordinates:", coordY);
+    }
+  };
+  
+  const gera_Fase_SenoideRetificada = () => {
+    try {
+      let tempCoordX = [];
+      let tempCoordY = [];
+  
+      for (let n = 1; n <= qtdHarmonicas; n++) {
+        tempCoordX.push(n); 
+  
+        if (n % 2 === 0) {
+          tempCoordY.push(''); 
+        } else {
+          tempCoordY.push(90);
+        }
+      }
+  
+      setCoordX(tempCoordX);
+      setCoordY(tempCoordY);
+  
+    } catch (e) {
+      console.log("Error:", e);
+    } finally {
+      console.log("X Coordinates:", coordX);
+      console.log("Y Coordinates:", coordY);
+    }
+  };
 
   if (coordX.length === 0 || coordY.length === 0) {
     return <Text>Loading chart data...</Text>;
