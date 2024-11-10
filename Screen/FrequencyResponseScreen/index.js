@@ -1,12 +1,36 @@
 import { StatusBar } from "expo-status-bar";
 import { Text, View, TouchableOpacity } from "react-native";
 import { useEffect } from "react";
-import * as ScreenOrientation from 'expo-screen-orientation';
+import * as ScreenOrientation from "expo-screen-orientation";
 import styles from "./styles.js";
-import React, { useState } from 'react';
-import { LineChart } from 'react-native-chart-kit';
+import React, { useState } from "react";
+import { LineChart } from "react-native-chart-kit";
 
 export default function FrequencyResponseScreen({ navigation }) {
+  /* Função para retornar o módulo da resposta em frequência de um canal
+  Parâmetros: 
+  f => array com os valores de x (frequência) do gráfico
+  fc => frequência de corte
+  Saída:
+  H => array com os valores de y resultantes
+  */
+  const modulo_reposta_em_frequencia = (f, f_c) => {
+    let H;
+    H = 1 / Math.sqrt(1 + (f / f_c) ** 2);
+    return H;
+  };
+
+  /* Função para retornar a fase da resposta em frequência de um canal
+  f => array com os valores de x (frequência) do gráfico
+  fc => frequência de corte
+  Saída:
+  Phi => array com os valores de y resultantes
+  */
+  const fase_resposta_em_frequencia = (f, f_c) => {
+    Phi = np.arctan(-f / f_c);
+    return Phi;
+  };
+
   useEffect(() => {
     ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
     geraOndaDenteSerra();
@@ -21,27 +45,26 @@ export default function FrequencyResponseScreen({ navigation }) {
     };
   }, []);
 
-
   return (
     <View style={styles.container}>
       <View>
-    {/* Documentação: https://www.npmjs.com/package/react-native-chart-kit */}
-    <LineChart
+        {/* Documentação: https://www.npmjs.com/package/react-native-chart-kit */}
+        <LineChart
           data={{
-            labels: coordX.map(String), 
+            labels: coordX.map(String),
             datasets: [
               {
                 data: coordY,
               },
             ],
           }}
-          width={800}  
-          height={300} 
-          withVerticalLabels = {false} //Acho que através desse atributo é possível filtrar os labels 
+          width={800}
+          height={300}
+          withVerticalLabels={false} //Acho que através desse atributo é possível filtrar os labels
           chartConfig={{
-            backgroundColor: '#ffffff',
-            backgroundGradientFrom: '#ffffff',
-            backgroundGradientTo: '#ffffff',
+            backgroundColor: "#ffffff",
+            backgroundGradientFrom: "#ffffff",
+            backgroundGradientTo: "#ffffff",
             color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`,
             labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
             style: {
@@ -50,10 +73,9 @@ export default function FrequencyResponseScreen({ navigation }) {
           }}
           style={{
             marginVertical: 8,
-
           }}
         />
-    </View>
+      </View>
       {/* <TouchableOpacity
         style={styles.botao}
         onPress={() => navigation.navigate("HomePage")}
