@@ -15,10 +15,10 @@ export default function DataImputScreen({ navigation }) {
       "Entrando na Tela de entrada de dados para efetuar os cálculos"
     );
 
-    geraOndaSenoidalRetificada();
+    // geraOndaSenoidalRetificada();
     // geraOndaDenteSerra();
     // geraOndaTriangular();
-    // geraOndaQuadrada();
+    geraOndaQuadrada();
     return () => {
       console.log(
         "Finalizando tela: Tela de entrada de dados para efetuar os cálculos"
@@ -36,26 +36,38 @@ export default function DataImputScreen({ navigation }) {
   const [coordX, setCoordX] = useState([]); //coordenada de X
   const [coordY, setCoordY] = useState([]); //coordenada de Y
   const [qtdHarmonicas, setQtdHarmonicas] = useState(300);
-
+  const [fase,setFase] = useState(0.5);
   const geraOndaQuadrada = () => {
     try {
-      setCoordY([]);
-      setCoordX([]);
+      const novasCoordX = [];
+      const novasCoordY = [];
+  
+      // Loop para gerar as coordenadas
       for (let t = intervaloInicial; t < intervaloFinal; t += passo) {
-        const coordY = Math.sign(
-          Math.sin(2 * Math.PI * frequenciaFundamental * t)
-        );
 
-        setCoordY((prevCoordY) => [...prevCoordY, coordY]);
-        if (
-          coordY >
-          Math.sign(Math.sin(2 * Math.PI * frequenciaFundamental * (t + passo)))
-        ) {
-          setCoordX((prevCoordx) => [...prevCoordx, t.toFixed(2)]);
+        const coordY = Math.sign(
+          Math.sin(2 * Math.PI * frequenciaFundamental * t + (fase * Math.PI)) // Fase aplicada
+        );
+    
+        // Armazenando coordY
+        novasCoordY.push(coordY);
+  
+     
+        const proximaCoordY = Math.sign(
+          Math.sin(2 * Math.PI * frequenciaFundamental * (t + passo) + (fase * Math.PI))
+        );
+        
+        if (coordY > proximaCoordY) {
+          novasCoordX.push(t.toFixed(2)); 
         } else {
-          setCoordX((prevCoordx) => [...prevCoordx, ""]);
+          novasCoordX.push(""); 
         }
       }
+  
+      // Atualizando o estado após o loop
+      setCoordY(novasCoordY);
+      setCoordX(novasCoordX);
+  
     } catch (e) {
       console.log("Erro:", e);
     } finally {
@@ -63,7 +75,7 @@ export default function DataImputScreen({ navigation }) {
       console.log("Coordenadas de X:", coordX);
     }
   };
-
+  
   const geraOndaDenteSerra = () => {
     // não estou levando em consideração a fase
     try {
