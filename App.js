@@ -63,7 +63,10 @@ export default function App() {
           <Drawer.Screen
             name="FrequencyDomainOutputScreen"
             component={FrequencyDomainOutputScreen}
-            options={{ title: "Output Spectrum Screen", headerShown: false }}
+            options={{
+              title: "Frequency DomainOutput Screen",
+              headerShown: false,
+            }}
           />
           <Drawer.Screen
             name="TimeDomainInputScreen"

@@ -1,11 +1,12 @@
 import { StatusBar } from "expo-status-bar";
 import { Text, View } from "react-native";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import * as ScreenOrientation from "expo-screen-orientation";
 import styles from "./styles.js";
 import React, { useState } from "react";
 import { LineChart } from "react-native-chart-kit";
 import { Dimensions } from "react-native";
+import { DataContext } from "../../context/DataContext.js";
 
 export default function FrequencyResponseScreen({ navigation }) {
   const [coordX, setCoordX] = useState([]); // coordenada de X
@@ -13,6 +14,9 @@ export default function FrequencyResponseScreen({ navigation }) {
   const [freqCorte, setFreqCorte] = useState(2); // frequência de corte
   const [passo, setPasso] = useState(0.1); // distância entre as coordenadas de X
   const [freqFinal, setFreqFinal] = useState(50); // frequência final que aparece no gráfico
+
+  const { x_response, setX_Response, y_response, setY_Response } =
+    useContext(DataContext);
 
   /* Função para retornar o módulo da resposta em frequência de um canal */
   const modulo_resposta_em_frequencia = (f, f_c) => {
@@ -57,7 +61,6 @@ export default function FrequencyResponseScreen({ navigation }) {
       (val) => val * (180 / Math.PI)
     );
 
-    console.log(valores_y_radiano[1]);
     // Ajustando a quantidade de rótulos no eixo X para visualização
     const labels = valores_x.map((val, index) =>
       index % freqFinal === 100 ? val.toFixed(1) : ""
@@ -68,9 +71,13 @@ export default function FrequencyResponseScreen({ navigation }) {
   };
 
   useEffect(() => {
-    // Bloqueio em modo paisagem, se necessário
     gerar_grafico_fase();
     // gerar_grafico_modulo();
+
+    //corrigir, pois não está atribuindo o valor ao setX_Input e setY_Input
+    setX_Input(coordX);
+    setY_Input(coordY);
+    // Bloqueio em modo paisagem
     ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
   }, []);
 
