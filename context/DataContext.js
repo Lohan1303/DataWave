@@ -3,28 +3,46 @@ import { createContext, useState } from "react";
 export const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
-  const [x_input, setX_Input] = useState([]);
-  const [y_input, setY_Input] = useState([]);
-  const [x_response, setX_Response] = useState([]);
-  const [y_response, setY_Response] = useState([]);
-  const [x_output, setX_Output] = useState([]);
-  const [y_output, setY_Output] = useState([]);
+  const [modulo_x_input, setModulo_X_Input] = useState([]);
+  const [modulo_y_input, setModulo_Y_Input] = useState([]);
+  const [modulo_x_response, setModulo_X_Response] = useState([]);
+  const [modulo_y_response, setModulo_Y_Response] = useState([]);
+  const [modulo_x_output, setModulo_X_Output] = useState([]);
+  const [modulo_y_output, setModulo_Y_Output] = useState([]);
+  const [fase_x_input, setFase_X_Input] = useState([]);
+  const [fase_y_input, setFase_Y_Input] = useState([]);
+  const [fase_x_response, setFase_X_Response] = useState([]);
+  const [fase_y_response, setFase_Y_Response] = useState([]);
+  const [fase_x_output, setFase_X_Output] = useState([]);
+  const [fase_y_output, setFase_Y_Output] = useState([]);
 
   return (
     <DataContext.Provider
       value={{
-        x_input,
-        setX_Input,
-        y_input,
-        setY_Input,
-        x_response,
-        setX_Response,
-        y_response,
-        setY_Response,
-        x_output,
-        setX_Output,
-        y_output,
-        setY_Output,
+        modulo_x_input,
+        setModulo_X_Input,
+        modulo_y_input,
+        setModulo_Y_Input,
+        modulo_x_response,
+        setModulo_X_Response,
+        modulo_y_response,
+        setModulo_Y_Response,
+        modulo_x_output,
+        setModulo_X_Output,
+        modulo_y_output,
+        setModulo_Y_Output,
+        fase_x_input,
+        setFase_X_Input,
+        fase_y_input,
+        setFase_Y_Input,
+        fase_x_response,
+        setFase_X_Response,
+        fase_y_response,
+        setFase_Y_Response,
+        fase_x_output,
+        setFase_X_Output,
+        fase_y_output,
+        setFase_Y_Output,
       }}
     >
       {children}

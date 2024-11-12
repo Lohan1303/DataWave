@@ -5,17 +5,21 @@ import * as ScreenOrientation from "expo-screen-orientation";
 import styles from "./styles.js";
 import React, { useState } from "react";
 import { LineChart } from "react-native-chart-kit";
-import { Dimensions } from "react-native";
+import { Dimensions, ScrollView } from "react-native";
 import { DataContext } from "../../context/DataContext.js";
 
 export default function FrequencyResponseScreen({ navigation }) {
-  const [coordX, setCoordX] = useState([]); // coordenada de X
-  const [coordY, setCoordY] = useState([]); // coordenada de Y
+  const [modulo_coordX, setModulo_CoordX] = useState([]); // coordenada de X
+  const [modulo_coordY, setModulo_CoordY] = useState([]); // coordenada de Y
+  const [fase_coordX, setFase_CoordX] = useState([]); // coordenada de X
+  const [fase_coordY, setFase_CoordY] = useState([]); // coordenada de Y
   const [freqCorte, setFreqCorte] = useState(2); // frequência de corte
   const [passo, setPasso] = useState(0.1); // distância entre as coordenadas de X
   const [freqFinal, setFreqFinal] = useState(50); // frequência final que aparece no gráfico
 
-  const { x_response, setX_Response, y_response, setY_Response } =
+  const { modulo_x_response, setModulo_X_Response, modulo_y_response, setModulo_Y_Response,
+    fase_x_response, setFase_X_Response, fase_y_response, setFase_Y_Response
+   } =
     useContext(DataContext);
 
   /* Função para retornar o módulo da resposta em frequência de um canal */
@@ -48,8 +52,11 @@ export default function FrequencyResponseScreen({ navigation }) {
       index % freqFinal === 0 ? val.toFixed(1) : ""
     );
 
-    setCoordX(labels); // Define os rótulos filtrados no eixo X
-    setCoordY(valores_y); // Define os valores da função de módulo no eixo Y
+    setModulo_CoordX(labels); // Define os rótulos filtrados no eixo X
+    setModulo_CoordY(valores_y); // Define os valores da função de módulo no eixo Y
+
+    setModulo_X_Response(valores_x);
+    setModulo_Y_Response(valores_y);
   };
 
   /* Função para gerar o gráfico da fase da resposta em frequência na tela */
@@ -63,59 +70,94 @@ export default function FrequencyResponseScreen({ navigation }) {
 
     // Ajustando a quantidade de rótulos no eixo X para visualização
     const labels = valores_x.map((val, index) =>
-      index % freqFinal === 100 ? val.toFixed(1) : ""
+      index % freqFinal === 0 ? val.toFixed(1) : ""
     );
 
-    setCoordX(labels); // Define os rótulos filtrados no eixo X
-    setCoordY(valores_y_grau); // Define os valores da função de módulo no eixo Y
+    setFase_CoordX(labels); // Define os rótulos filtrados no eixo X
+    setFase_CoordY(valores_y_grau); // Define os valores da função de módulo no eixo Y
+
+    setFase_X_Response(valores_x);
+    setFase_Y_Response(valores_y_grau);
   };
 
   useEffect(() => {
     gerar_grafico_fase();
-    // gerar_grafico_modulo();
+    gerar_grafico_modulo();
 
-    //corrigir, pois não está atribuindo o valor ao setX_Input e setY_Input
-    setX_Input(coordX);
-    setY_Input(coordY);
     // Bloqueio em modo paisagem
     ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
   }, []);
 
   return (
-    <View style={styles.container}>
-      {coordX.length > 0 && coordY.length > 0 && (
-        <View>
-          <LineChart
-            data={{
-              labels: coordX,
-              datasets: [
-                {
-                  data: coordY,
-                },
-              ],
-            }}
-            width={700} // Ajusta para largura da tela
-            height={300}
-            withVerticalLabels={true} // Exibe rótulos verticais
-            withShadow={true}
-            withInnerLines={false}
-            chartConfig={{
-              backgroundColor: "#ffffff",
-              backgroundGradientFrom: "#ffffff",
-              backgroundGradientTo: "#ffffff",
-              color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`,
-              labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-              style: {
-                borderRadius: 16,
-              },
-            }}
-            style={{
-              marginVertical: 8,
-            }}
-          />
-        </View>
-      )}
-      <StatusBar style="auto" />
-    </View>
+    <ScrollView>
+      <View style={styles.container}>
+        {modulo_coordX.length > 0 && modulo_coordY.length > 0 && (
+          <View>
+            <View>
+              <LineChart
+                data={{
+                  labels: modulo_coordX,
+                  datasets: [
+                    {
+                      data: modulo_coordY,
+                    },
+                  ],
+                }}
+                width={700} // Ajusta para largura da tela
+                height={300}
+                withVerticalLabels={true} // Exibe rótulos verticais
+                withShadow={true}
+                withInnerLines={false}
+                chartConfig={{
+                  backgroundColor: "#ffffff",
+                  backgroundGradientFrom: "#ffffff",
+                  backgroundGradientTo: "#ffffff",
+                  color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`,
+                  labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                  style: {
+                    borderRadius: 16,
+                  },
+                }}
+                style={{
+                  marginVertical: 8,
+                }}
+              />
+            </View>
+            <View>
+              <LineChart
+                data={{
+                  labels: fase_coordX,
+                  datasets: [
+                    {
+                      data: fase_coordY,
+                    },
+                  ],
+                }}
+                width={700} // Ajusta para largura da tela
+                height={300}
+                withVerticalLabels={true} // Exibe rótulos verticais
+                withShadow={true}
+                withInnerLines={false}
+                chartConfig={{
+                  backgroundColor: "#ffffff",
+                  backgroundGradientFrom: "#ffffff",
+                  backgroundGradientTo: "#ffffff",
+                  color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`,
+                  labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                  style: {
+                    borderRadius: 16,
+                  },
+                }}
+                style={{
+                  marginVertical: 8,
+                }}
+              />
+            </View>
+          </View>
+
+        )}
+        <StatusBar style="auto" />
+      </View>
+    </ScrollView>
   );
 }
