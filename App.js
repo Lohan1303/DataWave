@@ -35,7 +35,7 @@ export default function App() {
           <Drawer.Screen
             name="HomePage"
             component={Home}
-            options={{ title: "Home" }}
+            options={{ title: "Data input" }}
           />
           <Drawer.Screen
             name="DataInputScreen"

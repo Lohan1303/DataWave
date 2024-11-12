@@ -16,6 +16,10 @@ export const DataProvider = ({ children }) => {
   const [fase_x_output, setFase_X_Output] = useState([]);
   const [fase_y_output, setFase_Y_Output] = useState([]);
 
+  const [tipoOnda, setTipoOnda] = useState("");
+  const [frequenciaFundamental, setFrequenciaFundamental] = useState("");
+  const [frequenciaCorte, setFrequenciaCorte] = useState("");
+
   return (
     <DataContext.Provider
       value={{
@@ -43,6 +47,12 @@ export const DataProvider = ({ children }) => {
         setFase_X_Output,
         fase_y_output,
         setFase_Y_Output,
+        tipoOnda,
+        setTipoOnda,
+        frequenciaFundamental,
+        setFrequenciaFundamental,
+        frequenciaCorte,
+        setFrequenciaCorte,
       }}
     >
       {children}
