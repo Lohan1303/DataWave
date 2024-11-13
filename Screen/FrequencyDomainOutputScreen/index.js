@@ -1,5 +1,11 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import { useEffect, useState, useContext } from "react";
 import styles from "./styles.js";
 import { DataContext } from "../../context/DataContext.js";
@@ -20,29 +26,37 @@ export default function FrequencyDomainOutputScreen({ navigation }) {
     modulo_y_response,
     fase_x_response,
     fase_y_response,
-    modulo_x_output,
-    modulo_y_output,
-    fase_x_output,
-    fase_y_output,
     setModulo_X_Output,
     setModulo_Y_Output,
     setFase_X_Output,
-    setFase_Y_Output
+    setFase_Y_Output,
   } = useContext(DataContext);
 
-  const modulo_espectro_saida = (modulo_x_input, modulo_y_input, modulo_x_response, modulo_y_response) => {
+  const modulo_espectro_saida = (
+    modulo_x_input,
+    modulo_y_input,
+    modulo_x_response,
+    modulo_y_response
+  ) => {
     let x_output = modulo_x_input;
     let y_output = [];
     for (i = 0; i < x_output.length; i++) {
       let index_valor_procurado = modulo_x_response.indexOf(modulo_x_input[i]);
-      y_output.push(modulo_y_input[i] * modulo_y_response[index_valor_procurado]);
+      y_output.push(
+        modulo_y_input[i] * modulo_y_response[index_valor_procurado]
+      );
     }
-    
+
     y_output = y_output.map((item) => (isNaN(item) ? "" : item));
     return [x_output, y_output];
   };
 
-  const fase_espectro_saida = (fase_x_input, fase_y_input, fase_x_response, fase_y_response) => {
+  const fase_espectro_saida = (
+    fase_x_input,
+    fase_y_input,
+    fase_x_response,
+    fase_y_response
+  ) => {
     let x_output = fase_x_input;
     let y_output = [];
     for (i = 0; i < x_output.length; i++) {
@@ -53,7 +67,12 @@ export default function FrequencyDomainOutputScreen({ navigation }) {
     return [x_output, y_output];
   };
 
-  const gerar_grafico_modulo = (modulo_x_input, modulo_y_input, modulo_x_response, modulo_y_response) => {
+  const gerar_grafico_modulo = (
+    modulo_x_input,
+    modulo_y_input,
+    modulo_x_response,
+    modulo_y_response
+  ) => {
     const [x_output, y_output] = modulo_espectro_saida(
       modulo_x_input,
       modulo_y_input,
@@ -62,9 +81,17 @@ export default function FrequencyDomainOutputScreen({ navigation }) {
     );
     setModulo_CoordX(x_output);
     setModulo_CoordY(y_output);
+
+    setModulo_X_Output(x_output);
+    setModulo_Y_Output(y_output);
   };
 
-  const gerar_grafico_fase = (fase_x_input, fase_y_input, fase_x_response, fase_y_response) => {
+  const gerar_grafico_fase = (
+    fase_x_input,
+    fase_y_input,
+    fase_x_response,
+    fase_y_response
+  ) => {
     const [x_output, y_output] = fase_espectro_saida(
       fase_x_input,
       fase_y_input,
@@ -73,11 +100,24 @@ export default function FrequencyDomainOutputScreen({ navigation }) {
     );
     setFase_CoordX(x_output);
     setFase_CoordY(y_output);
+
+    setFase_X_Output(x_output);
+    setFase_Y_Output(y_output);
   };
 
   useEffect(() => {
-    gerar_grafico_modulo(modulo_x_input, modulo_y_input, modulo_x_response, modulo_y_response);
-    gerar_grafico_fase(fase_x_input, fase_y_input, fase_x_response, fase_y_response);
+    gerar_grafico_modulo(
+      modulo_x_input,
+      modulo_y_input,
+      modulo_x_response,
+      modulo_y_response
+    );
+    gerar_grafico_fase(
+      fase_x_input,
+      fase_y_input,
+      fase_x_response,
+      fase_y_response
+    );
 
     console.log(
       "Entrando na Tela para apresentação dos gráficos do espectro do sinal de saída"
