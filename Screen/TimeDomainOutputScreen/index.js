@@ -117,7 +117,7 @@ export default function TimeDomaOutputScreen({ navigation }) {
 
       fase_y_output = fase_y_output.map((item) => item * (Math.PI / 180));
 
-      for (let t = 0; t <= 50; t += 0.5) {
+      for (let t = -2; t <= 2; t += 0.01) {
         let somaHarmonicas = 0;
 
         for (let n = 1; n <= modulo_x_output.length; n++) {
