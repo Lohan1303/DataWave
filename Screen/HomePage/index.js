@@ -7,6 +7,23 @@ import { useFocusEffect } from "@react-navigation/native";
 import styles from "./styles.js";
 
 export default function HomePage({ navigation }) {
+  const {
+    tipoOnda,
+    setTipoOnda,
+    frequenciaFundamental,
+    setFrequenciaFundamental,
+    frequenciaCorte,
+    setFrequenciaCorte,
+    setModulo_X_Input,
+    setModulo_Y_Input,
+    setModulo_X_Response,
+    setModulo_Y_Response,
+    setFase_X_Input,
+    setFase_Y_Input,
+    setFase_X_Response,
+    setFase_Y_Response,
+  } = useContext(DataContext);
+
   useFocusEffect(
     useCallback(() => {
       const lockOrientation = async () => {
@@ -26,20 +43,22 @@ export default function HomePage({ navigation }) {
     }, [])
   );
 
-  const {
-    tipoOnda,
-    setTipoOnda,
-    frequenciaFundamental,
-    setFrequenciaFundamental,
-    frequenciaCorte,
-    setFrequenciaCorte,
-  } = useContext(DataContext);
-
   useEffect(() => {
     if (!tipoOnda) {
-      setTipoOnda("senoidal");
+      setTipoOnda("Senoide Retificada");
     }
   }, [tipoOnda, setTipoOnda]);
+
+  useEffect(() => {
+    setModulo_X_Input([]);
+    setModulo_Y_Input([]);
+    setModulo_X_Response([]);
+    setModulo_Y_Response([]);
+    setFase_X_Input([]);
+    setFase_Y_Input([]);
+    setFase_X_Response([]);
+    setFase_Y_Response([]);
+  }, [tipoOnda, frequenciaCorte, frequenciaFundamental]);
 
   const handleFrequenciaFundamentalChange = (value) => {
     if (value === "") {
@@ -81,10 +100,10 @@ export default function HomePage({ navigation }) {
         onValueChange={(itemValue) => setTipoOnda(itemValue)}
         style={styles.picker}
       >
-        <Picker.Item label="Senoide Retificada" value="senoidal" />
-        <Picker.Item label="Quadrada" value="quadrada" />
-        <Picker.Item label="Triangular" value="triangular" />
-        <Picker.Item label="Dente de Serra" value="dente_de_serra" />
+        <Picker.Item label="Senoide Retificada" value="Senoide Retificada" />
+        <Picker.Item label="Quadrada" value="Quadrada" />
+        <Picker.Item label="Triangular" value="Triangular" />
+        <Picker.Item label="Dente de Serra" value="Dente de Serra" />
       </Picker>
 
       <Text style={styles.label}>Frequência Fundamental (kHz)</Text>

@@ -126,8 +126,8 @@ export default function FrequencyResponseScreen({ navigation }) {
       <View style={styles.container}>
         {modulo_coordX.length > 0 && modulo_coordY.length > 0 && (
           <View>
-            <View>
-              <Text style={styles.chartTitle}>opa</Text>
+            <View style={{ justifyContent: "center", alignItems: "center" }}>
+              <Text style={styles.chartTitle}>Modulo</Text>
               <LineChart
                 data={{
                   labels: modulo_coordX,
@@ -162,8 +162,8 @@ export default function FrequencyResponseScreen({ navigation }) {
                 xLabelsOffset={-5}
               />
             </View>
-            <View>
-              <Text style={styles.chartTitle}>opa</Text>
+            <View style={{ justifyContent: "center", alignItems: "center" }}>
+              <Text style={styles.chartTitle}>Fase</Text>
               <LineChart
                 data={{
                   labels: fase_coordX,

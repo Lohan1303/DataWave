@@ -54,16 +54,16 @@ export default function DataImputScreen({ navigation }) {
 
   useEffect(() => {
     switch (tipoOnda) {
-      case "quadrada":
+      case "Quadrada":
         geraOndaQuadrada();
         break;
-      case "dente_de_serra":
+      case "Dente de Serra":
         geraOndaDenteSerra();
         break;
-      case "triangular":
+      case "Triangular":
         geraOndaTriangular();
         break;
-      case "senoidal":
+      case "Senoide Retificada":
         geraOndaSenoidalRetificada();
         break;
       default:

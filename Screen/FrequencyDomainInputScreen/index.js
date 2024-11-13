@@ -44,19 +44,19 @@ export default function FrequencyDomainInputScreen({ navigation }) {
   useEffect(() => {
     if (tipoOnda) {
       switch (tipoOnda) {
-        case "quadrada":
+        case "Quadrada":
           gera_An_Quadrada();
           gera_Fase_Quadrada();
           break;
-        case "dente_de_serra":
+        case "Dente de Serra":
           gera_An_DenteSerra();
           gera_Fase_DenteSerra();
           break;
-        case "triangular":
+        case "Triangular":
           gera_An_Triangular();
           gera_Fase_Triangular();
           break;
-        case "senoidal":
+        case "Senoide Retificada":
           gera_An_SenRetificada();
           gera_Fase_SenoideRetificada();
           break;
@@ -289,8 +289,8 @@ export default function FrequencyDomainInputScreen({ navigation }) {
   return (
     <ScrollView>
       <View style={styles.container}>
-        <View>
-          <Text style={styles.chartTitle}>opa</Text>
+        <View style={{ justifyContent: "center", alignItems: "center" }}>
+          <Text style={styles.chartTitle}>Modulo</Text>
           <LineChart
             data={{
               labels: modulo_coordX,
@@ -320,8 +320,8 @@ export default function FrequencyDomainInputScreen({ navigation }) {
             xLabelsOffset={-5}
           />
         </View>
-        <View>
-          <Text style={styles.chartTitle}>opa</Text>
+        <View style={{ justifyContent: "center", alignItems: "center" }}>
+          <Text style={styles.chartTitle}>Fase</Text>
           <LineChart
             data={{
               labels: fase_coordX,
