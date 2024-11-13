@@ -1,11 +1,12 @@
 import { StatusBar } from "expo-status-bar";
 import { Text, View, TouchableOpacity, ScrollView } from "react-native";
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import * as ScreenOrientation from "expo-screen-orientation";
-import styles from "./styles.js";
 import React, { useState, useContext } from "react";
 import { LineChart } from "react-native-chart-kit";
 import { DataContext } from "../../context/DataContext.js";
+import { useFocusEffect } from "@react-navigation/native";
+import styles from "./styles.js";
 
 export default function FrequencyDomainInputScreen({ navigation }) {
   const [modulo_coordX, setModulo_CoordX] = useState([]); // Coordinate X values
@@ -13,28 +14,57 @@ export default function FrequencyDomainInputScreen({ navigation }) {
   const [fase_coordX, setFase_CoordX] = useState([]); // Coordinate X values
   const [fase_coordY, setFase_CoordY] = useState([]); // Coordinate Y values
   const [qtdHarmonicas, setQtdHarmonicas] = useState(50);
+  const { tipoOnda } = useContext(DataContext);
 
-  const { modulo_x_input, setModulo_X_Input, modulo_y_input, setModulo_Y_Input,
-    fase_x_input, setFase_X_Input, fase_y_input, setFase_Y_Input
-   } = useContext(DataContext);
+  const {
+    setModulo_X_Input,
+    setModulo_Y_Input,
+    setFase_X_Input,
+    setFase_Y_Input,
+  } = useContext(DataContext);
+
+  useFocusEffect(
+    useCallback(() => {
+      const lockOrientation = async () => {
+        try {
+          await ScreenOrientation.lockAsync(
+            ScreenOrientation.OrientationLock.LANDSCAPE
+          );
+        } catch (error) {
+          console.error("Erro ao bloquear a orientação:", error);
+        }
+      };
+      lockOrientation();
+      return () => {
+        ScreenOrientation.unlockAsync();
+      };
+    }, [])
+  );
 
   useEffect(() => {
-    // gera_An_Quadrada();
-    // gera_An_Triangular();
-    // gera_An_DenteSerra();
-    gera_An_SenRetificada();
-
-    // gera_Fase_Quadrada();
-    // gera_Fase_Triangular();
-    // gera_Fase_DenteSerra();
-    gera_Fase_SenoideRetificada();
-    ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
-
-    console.log("Entered screen for frequency domain input");
-    console.log(modulo_coordX);
-
-    return () => console.log("Exiting frequency domain input screen");
-  }, []);
+    if (tipoOnda) {
+      switch (tipoOnda) {
+        case "quadrada":
+          gera_An_Quadrada();
+          gera_Fase_Quadrada();
+          break;
+        case "dente_de_serra":
+          gera_An_DenteSerra();
+          gera_Fase_DenteSerra();
+          break;
+        case "triangular":
+          gera_An_Triangular();
+          gera_Fase_Triangular();
+          break;
+        case "senoidal":
+          gera_An_SenRetificada();
+          gera_Fase_SenoideRetificada();
+          break;
+        default:
+          console.log("Tipo de onda não reconhecido.");
+      }
+    }
+  }, [tipoOnda]);
 
   const gera_An_Quadrada = () => {
     try {
@@ -56,7 +86,6 @@ export default function FrequencyDomainInputScreen({ navigation }) {
 
       setModulo_X_Input(tempCoordX);
       setModulo_Y_Input(tempCoordY);
-
     } catch (e) {
       console.log("Error:", e);
     } finally {
@@ -85,7 +114,6 @@ export default function FrequencyDomainInputScreen({ navigation }) {
 
       setModulo_X_Input(tempCoordX);
       setModulo_Y_Input(tempCoordY);
-
     } catch (e) {
       console.log("Error:", e);
     } finally {
@@ -109,7 +137,6 @@ export default function FrequencyDomainInputScreen({ navigation }) {
 
       setModulo_X_Input(tempCoordX);
       setModulo_Y_Input(tempCoordY);
-
     } catch (e) {
       console.log("Error:", e);
     } finally {
@@ -138,7 +165,6 @@ export default function FrequencyDomainInputScreen({ navigation }) {
 
       setModulo_X_Input(tempCoordX);
       setModulo_Y_Input(tempCoordY);
-
     } catch (e) {
       console.log("Error:", e);
     } finally {
@@ -164,7 +190,6 @@ export default function FrequencyDomainInputScreen({ navigation }) {
 
       setFase_X_Input(tempCoordX);
       setFase_Y_Input(tempCoordY);
-
     } catch (e) {
       console.log("Error:", e);
     } finally {
@@ -195,7 +220,6 @@ export default function FrequencyDomainInputScreen({ navigation }) {
 
       setFase_X_Input(tempCoordX);
       setFase_Y_Input(tempCoordY);
-
     } catch (e) {
       console.log("Error:", e);
     } finally {
@@ -223,7 +247,6 @@ export default function FrequencyDomainInputScreen({ navigation }) {
 
       setFase_X_Input(tempCoordX);
       setFase_Y_Input(tempCoordY);
-
     } catch (e) {
       console.log("Error:", e);
     } finally {
@@ -251,7 +274,6 @@ export default function FrequencyDomainInputScreen({ navigation }) {
 
       setFase_X_Input(tempCoordX);
       setFase_Y_Input(tempCoordY);
-
     } catch (e) {
       console.log("Error:", e);
     } finally {
@@ -268,47 +290,65 @@ export default function FrequencyDomainInputScreen({ navigation }) {
     <ScrollView>
       <View style={styles.container}>
         <View>
+          <Text style={styles.chartTitle}>opa</Text>
           <LineChart
             data={{
               labels: modulo_coordX,
               datasets: [{ data: modulo_coordY }],
             }}
-            width={800}
+            width={700}
             height={300}
-            withVerticalLabels={true}
-            withShadow={false}
-            withInnerLines={false}
             chartConfig={{
-              backgroundColor: "#ffffff",
-              backgroundGradientFrom: "#ffffff",
-              backgroundGradientTo: "#ffffff",
-              color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`,
-              labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-              style: { borderRadius: 16 },
+              backgroundColor: "#1f1f1f",
+              backgroundGradientFrom: "#2d2d2d",
+              backgroundGradientTo: "#2d2d2d",
+              color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+              labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+              style: {
+                borderRadius: 16,
+                marginLeft: 20, // Ajustando as margens
+                marginRight: 20,
+              },
             }}
-            style={{ marginVertical: 8 }}
+            style={styles.chart}
+            withVerticalLabels
+            withShadow
+            withInnerLines
+            withOuterLines={false}
+            withVerticalLines={false}
+            withHorizontalLines={false}
+            xLabelsOffset={-5}
           />
         </View>
         <View>
+          <Text style={styles.chartTitle}>opa</Text>
           <LineChart
             data={{
               labels: fase_coordX,
               datasets: [{ data: fase_coordY }],
             }}
-            width={800}
+            width={700}
             height={300}
-            withVerticalLabels={true}
-            withShadow={false}
-            withInnerLines={false}
             chartConfig={{
-              backgroundColor: "#ffffff",
-              backgroundGradientFrom: "#ffffff",
-              backgroundGradientTo: "#ffffff",
-              color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`,
-              labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-              style: { borderRadius: 16 },
+              backgroundColor: "#1f1f1f",
+              backgroundGradientFrom: "#2d2d2d",
+              backgroundGradientTo: "#2d2d2d",
+              color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+              labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+              style: {
+                borderRadius: 16,
+                marginLeft: 20,
+                marginRight: 20,
+              },
             }}
-            style={{ marginVertical: 8 }}
+            style={styles.chart}
+            withVerticalLabels
+            withShadow
+            withInnerLines
+            withOuterLines={false}
+            withVerticalLines={false}
+            withHorizontalLines={false}
+            xLabelsOffset={-5}
           />
         </View>
         <StatusBar style="auto" />

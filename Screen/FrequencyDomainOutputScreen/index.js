@@ -5,8 +5,11 @@ import {
   View,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from "react-native";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import * as ScreenOrientation from "expo-screen-orientation";
 import styles from "./styles.js";
 import { DataContext } from "../../context/DataContext.js";
 import { LineChart } from "react-native-chart-kit";
@@ -31,6 +34,59 @@ export default function FrequencyDomainOutputScreen({ navigation }) {
     setFase_X_Output,
     setFase_Y_Output,
   } = useContext(DataContext);
+
+  useFocusEffect(
+    useCallback(() => {
+      const lockOrientation = async () => {
+        try {
+          await ScreenOrientation.lockAsync(
+            ScreenOrientation.OrientationLock.LANDSCAPE
+          );
+        } catch (error) {
+          console.error("Erro ao bloquear a orientação:", error);
+        }
+      };
+      lockOrientation();
+      return () => {
+        ScreenOrientation.unlockAsync();
+      };
+    }, [])
+  );
+
+  useEffect(() => {
+    if (
+      !modulo_x_input.length ||
+      !modulo_y_input.length ||
+      !modulo_x_response.length ||
+      !modulo_y_response.length ||
+      !fase_x_input.length ||
+      !fase_y_input.length ||
+      !fase_x_response.length ||
+      !fase_y_response.length
+    ) {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "HomePage" }],
+      });
+      Alert.alert(
+        "Aviso",
+        "Por favor, passe pelo Frequency Domain input chart antes."
+      );
+    } else {
+      gerar_grafico_modulo(
+        modulo_x_input,
+        modulo_y_input,
+        modulo_x_response,
+        modulo_y_response
+      );
+      gerar_grafico_fase(
+        fase_x_input,
+        fase_y_input,
+        fase_x_response,
+        fase_y_response
+      );
+    }
+  }, []);
 
   const modulo_espectro_saida = (
     modulo_x_input,
@@ -105,36 +161,13 @@ export default function FrequencyDomainOutputScreen({ navigation }) {
     setFase_Y_Output(y_output);
   };
 
-  useEffect(() => {
-    gerar_grafico_modulo(
-      modulo_x_input,
-      modulo_y_input,
-      modulo_x_response,
-      modulo_y_response
-    );
-    gerar_grafico_fase(
-      fase_x_input,
-      fase_y_input,
-      fase_x_response,
-      fase_y_response
-    );
-
-    console.log(
-      "Entrando na Tela para apresentação dos gráficos do espectro do sinal de saída"
-    );
-    return () => {
-      console.log(
-        "Finalizando tela: Tela para apresentação dos gráficos do espectro do sinal de saída"
-      );
-    };
-  }, []);
-
   return (
     <ScrollView>
       <View style={styles.container}>
         {modulo_coordX.length > 0 && modulo_coordY.length > 0 && (
           <View>
             <View>
+              <Text style={styles.chartTitle}>opa</Text>
               <LineChart
                 data={{
                   labels: modulo_coordX,
@@ -144,27 +177,33 @@ export default function FrequencyDomainOutputScreen({ navigation }) {
                     },
                   ],
                 }}
-                width={700} // Ajusta para largura da tela
+                width={700}
                 height={300}
-                withVerticalLabels={true} // Exibe rótulos verticais
-                withShadow={true}
-                withInnerLines={false}
                 chartConfig={{
-                  backgroundColor: "#ffffff",
-                  backgroundGradientFrom: "#ffffff",
-                  backgroundGradientTo: "#ffffff",
-                  color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`,
-                  labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                  backgroundColor: "#1f1f1f",
+                  backgroundGradientFrom: "#2d2d2d",
+                  backgroundGradientTo: "#2d2d2d",
+                  color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                  labelColor: (opacity = 1) =>
+                    `rgba(255, 255, 255, ${opacity})`,
                   style: {
                     borderRadius: 16,
+                    marginLeft: 20,
+                    marginRight: 20,
                   },
                 }}
-                style={{
-                  marginVertical: 8,
-                }}
+                style={styles.chart}
+                withVerticalLabels
+                withShadow
+                withInnerLines
+                withOuterLines={false}
+                withVerticalLines={false}
+                withHorizontalLines={false}
+                xLabelsOffset={-5}
               />
             </View>
             <View>
+              <Text style={styles.chartTitle}>opa</Text>
               <LineChart
                 data={{
                   labels: fase_coordX,
@@ -174,24 +213,29 @@ export default function FrequencyDomainOutputScreen({ navigation }) {
                     },
                   ],
                 }}
-                width={700} // Ajusta para largura da tela
+                width={700}
                 height={300}
-                withVerticalLabels={true} // Exibe rótulos verticais
-                withShadow={true}
-                withInnerLines={false}
                 chartConfig={{
-                  backgroundColor: "#ffffff",
-                  backgroundGradientFrom: "#ffffff",
-                  backgroundGradientTo: "#ffffff",
-                  color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`,
-                  labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                  backgroundColor: "#1f1f1f",
+                  backgroundGradientFrom: "#2d2d2d",
+                  backgroundGradientTo: "#2d2d2d",
+                  color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                  labelColor: (opacity = 1) =>
+                    `rgba(255, 255, 255, ${opacity})`,
                   style: {
                     borderRadius: 16,
+                    marginLeft: 20, // Ajustando as margens
+                    marginRight: 20,
                   },
                 }}
-                style={{
-                  marginVertical: 8,
-                }}
+                style={styles.chart}
+                withVerticalLabels
+                withShadow
+                withInnerLines
+                withOuterLines={false}
+                withVerticalLines={false}
+                withHorizontalLines={false}
+                xLabelsOffset={-5}
               />
             </View>
           </View>

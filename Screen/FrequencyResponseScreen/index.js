@@ -1,26 +1,64 @@
 import { StatusBar } from "expo-status-bar";
-import { Text, View } from "react-native";
-import { useContext, useEffect } from "react";
+import { Text, View, Alert } from "react-native";
+import { useContext, useEffect, useCallback } from "react";
 import * as ScreenOrientation from "expo-screen-orientation";
 import styles from "./styles.js";
 import React, { useState } from "react";
 import { LineChart } from "react-native-chart-kit";
 import { Dimensions, ScrollView } from "react-native";
 import { DataContext } from "../../context/DataContext.js";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function FrequencyResponseScreen({ navigation }) {
   const [modulo_coordX, setModulo_CoordX] = useState([]); // coordenada de X
   const [modulo_coordY, setModulo_CoordY] = useState([]); // coordenada de Y
   const [fase_coordX, setFase_CoordX] = useState([]); // coordenada de X
   const [fase_coordY, setFase_CoordY] = useState([]); // coordenada de Y
-  const [freqCorte, setFreqCorte] = useState(2); // frequência de corte
   const [passo, setPasso] = useState(0.1); // distância entre as coordenadas de X
   const [freqFinal, setFreqFinal] = useState(50); // frequência final que aparece no gráfico
 
-  const { modulo_x_response, setModulo_X_Response, modulo_y_response, setModulo_Y_Response,
-    fase_x_response, setFase_X_Response, fase_y_response, setFase_Y_Response
-   } =
-    useContext(DataContext);
+  const {
+    setModulo_X_Response,
+    setModulo_Y_Response,
+    setFase_X_Response,
+    setFase_Y_Response,
+    frequenciaCorte,
+    tipoOnda,
+  } = useContext(DataContext);
+
+  useFocusEffect(
+    useCallback(() => {
+      const lockOrientation = async () => {
+        try {
+          await ScreenOrientation.lockAsync(
+            ScreenOrientation.OrientationLock.LANDSCAPE
+          );
+        } catch (error) {
+          console.error("Erro ao bloquear a orientação:", error);
+        }
+      };
+      lockOrientation();
+      return () => {
+        ScreenOrientation.unlockAsync();
+      };
+    }, [])
+  );
+
+  useEffect(() => {
+    if (frequenciaCorte && tipoOnda) {
+      gerar_grafico_fase();
+      gerar_grafico_modulo();
+    } else {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "HomePage" }],
+      });
+      Alert.alert(
+        "Aviso",
+        "Por favor, preencha o tipo de onda e a frequência corte."
+      );
+    }
+  }, [frequenciaCorte, tipoOnda]);
 
   /* Função para retornar o módulo da resposta em frequência de um canal */
   const modulo_resposta_em_frequencia = (f, f_c) => {
@@ -45,7 +83,7 @@ export default function FrequencyResponseScreen({ navigation }) {
   /* Função para gerar o gráfico do módulo da resposta em frequência na tela */
   const gerar_grafico_modulo = () => {
     const valores_x = gerar_frequencias(freqFinal, passo); // Alterado passo para 0.5 para simplificar visualização
-    const valores_y = modulo_resposta_em_frequencia(valores_x, freqCorte);
+    const valores_y = modulo_resposta_em_frequencia(valores_x, frequenciaCorte);
 
     // Ajustando a quantidade de rótulos no eixo X para visualização
     const labels = valores_x.map((val, index) =>
@@ -62,7 +100,10 @@ export default function FrequencyResponseScreen({ navigation }) {
   /* Função para gerar o gráfico da fase da resposta em frequência na tela */
   const gerar_grafico_fase = () => {
     const valores_x = gerar_frequencias(freqFinal, passo); // Alterado passo para 0.5 para simplificar visualização
-    const valores_y_radiano = fase_resposta_em_frequencia(valores_x, freqCorte);
+    const valores_y_radiano = fase_resposta_em_frequencia(
+      valores_x,
+      frequenciaCorte
+    );
 
     const valores_y_grau = valores_y_radiano.map(
       (val) => val * (180 / Math.PI)
@@ -80,20 +121,13 @@ export default function FrequencyResponseScreen({ navigation }) {
     setFase_Y_Response(valores_y_grau);
   };
 
-  useEffect(() => {
-    gerar_grafico_fase();
-    gerar_grafico_modulo();
-
-    // Bloqueio em modo paisagem
-    ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
-  }, []);
-
   return (
     <ScrollView>
       <View style={styles.container}>
         {modulo_coordX.length > 0 && modulo_coordY.length > 0 && (
           <View>
             <View>
+              <Text style={styles.chartTitle}>opa</Text>
               <LineChart
                 data={{
                   labels: modulo_coordX,
@@ -103,27 +137,33 @@ export default function FrequencyResponseScreen({ navigation }) {
                     },
                   ],
                 }}
-                width={700} // Ajusta para largura da tela
+                width={700}
                 height={300}
-                withVerticalLabels={true} // Exibe rótulos verticais
-                withShadow={true}
-                withInnerLines={false}
                 chartConfig={{
-                  backgroundColor: "#ffffff",
-                  backgroundGradientFrom: "#ffffff",
-                  backgroundGradientTo: "#ffffff",
-                  color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`,
-                  labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                  backgroundColor: "#1f1f1f",
+                  backgroundGradientFrom: "#2d2d2d",
+                  backgroundGradientTo: "#2d2d2d",
+                  color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                  labelColor: (opacity = 1) =>
+                    `rgba(255, 255, 255, ${opacity})`,
                   style: {
                     borderRadius: 16,
+                    marginLeft: 20,
+                    marginRight: 20,
                   },
                 }}
-                style={{
-                  marginVertical: 8,
-                }}
+                style={styles.chart}
+                withVerticalLabels
+                withShadow
+                withInnerLines
+                withOuterLines={false}
+                withVerticalLines={false}
+                withHorizontalLines={false}
+                xLabelsOffset={-5}
               />
             </View>
             <View>
+              <Text style={styles.chartTitle}>opa</Text>
               <LineChart
                 data={{
                   labels: fase_coordX,
@@ -133,28 +173,32 @@ export default function FrequencyResponseScreen({ navigation }) {
                     },
                   ],
                 }}
-                width={700} // Ajusta para largura da tela
+                width={700}
                 height={300}
-                withVerticalLabels={true} // Exibe rótulos verticais
-                withShadow={true}
-                withInnerLines={false}
                 chartConfig={{
-                  backgroundColor: "#ffffff",
-                  backgroundGradientFrom: "#ffffff",
-                  backgroundGradientTo: "#ffffff",
-                  color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`,
-                  labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                  backgroundColor: "#1f1f1f",
+                  backgroundGradientFrom: "#2d2d2d",
+                  backgroundGradientTo: "#2d2d2d",
+                  color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                  labelColor: (opacity = 1) =>
+                    `rgba(255, 255, 255, ${opacity})`,
                   style: {
                     borderRadius: 16,
+                    marginLeft: 20,
+                    marginRight: 20,
                   },
                 }}
-                style={{
-                  marginVertical: 8,
-                }}
+                style={styles.chart}
+                withVerticalLabels
+                withShadow
+                withInnerLines
+                withOuterLines={false}
+                withVerticalLines={false}
+                withHorizontalLines={false}
+                xLabelsOffset={-5}
               />
             </View>
           </View>
-
         )}
         <StatusBar style="auto" />
       </View>

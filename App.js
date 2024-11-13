@@ -31,52 +31,76 @@ export default function App() {
   return (
     <DataProvider>
       <NavigationContainer>
-        <Drawer.Navigator initialRouteName="HomePage">
+        <Drawer.Navigator
+          initialRouteName="HomePage"
+          screenOptions={{
+            headerTintColor: "white",
+            drawerStyle: { backgroundColor: "black" },
+            drawerLabelStyle: { color: "white" },
+          }}
+        >
           <Drawer.Screen
             name="HomePage"
             component={Home}
-            options={{ title: "Data input" }}
+            options={{
+              title: "Data input",
+              headerStyle: { backgroundColor: "black" },
+            }}
           />
           <Drawer.Screen
             name="DataInputScreen"
             component={DataImputScreen}
-            options={{ title: "Data ImputScreen", headerShown: false }}
+            options={{
+              title: "Input chart",
+              headerTitle: "Input chart",
+              headerStyle: { backgroundColor: "black", height: 50 },
+            }}
           />
           <Drawer.Screen
             name="FrequencyDomainInputScreen"
             component={FrequencyDomainInputScreen}
             options={{
-              title: "Frequency DomainInput Screen",
-              headerShown: false,
+              title: "Frequency Domain Input Chart",
+              headerTitle: "Frequency Domain Input Chart",
+              headerStyle: { backgroundColor: "black", height: 50 },
             }}
           />
           <Drawer.Screen
             name="FrequencyResponseScreen"
             component={FrequencyResponseScreen}
-            options={{ title: "Frequency Response Screen", headerShown: false }}
+            options={{
+              title: "Frequency Response Chart",
+              headerTitle: "Frequency Response Chart",
+              headerStyle: { backgroundColor: "black", height: 50 },
+            }}
           />
-          <Drawer.Screen
+          {/* <Drawer.Screen
             name="ImpulseResponseScreen"
             component={ImpulseResponseScreen}
             options={{ title: "Impulse Response Screen", headerShown: false }}
-          />
+          /> */}
           <Drawer.Screen
             name="FrequencyDomainOutputScreen"
             component={FrequencyDomainOutputScreen}
             options={{
-              title: "Frequency DomainOutput Screen",
-              headerShown: false,
+              title: "Frequency Domain Output Chart",
+              headerTitle: "Frequency Domain Output Chart",
+              headerStyle: { backgroundColor: "black", height: 50 },
             }}
           />
-          <Drawer.Screen
+          {/* <Drawer.Screen
             name="TimeDomainInputScreen"
             component={TimeDomainInputScreen}
             options={{ title: "Time Domain Input Screen", headerShown: false }}
-          />
+          /> */}
           <Drawer.Screen
             name="TimeDomainOutputScreen"
             component={TimeDomaOutputScreen}
-            options={{ title: "Time Domain Output Screen", headerShown: false }}
+            options={{
+              title: "Time Domain Output Chart",
+              headerTitle: "Time Domain Output Chart",
+              headerStyle: { backgroundColor: "black", height: 50 },
+            }}
           />
         </Drawer.Navigator>
       </NavigationContainer>

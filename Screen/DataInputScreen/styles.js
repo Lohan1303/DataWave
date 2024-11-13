@@ -3,21 +3,25 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
     justifyContent: "center",
-  },
-  texto: {
-    fontSize: 20,
-  },
-  botao: {
-    width: "90%",
-    height: 70,
-    borderColor: "#000",
-    borderWidth: 2,
-    borderRadius: 20,
     alignItems: "center",
+    backgroundColor: "#000000",
+    padding: 20,
+  },
+  chartTitle: {
+    color: "white",
+    fontSize: 18,
+    marginBottom: 5,
+  },
+  chart: {
+    marginVertical: 8,
+    alignSelf: "center",
+  },
+  scrollView: {
+    flexGrow: 1,
     justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#000000",
   },
 });
 

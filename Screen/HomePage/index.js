@@ -4,14 +4,13 @@ import { Picker } from "@react-native-picker/picker";
 import * as ScreenOrientation from "expo-screen-orientation";
 import { DataContext } from "../../context/DataContext";
 import { useFocusEffect } from "@react-navigation/native";
+import styles from "./styles.js";
 
 export default function HomePage({ navigation }) {
-  // Usando useFocusEffect para garantir que a orientação seja fixada no modo retrato sempre que a tela ganhar foco
   useFocusEffect(
     useCallback(() => {
       const lockOrientation = async () => {
         try {
-          // Bloqueia a orientação no modo retrato (orientação vertical)
           await ScreenOrientation.lockAsync(
             ScreenOrientation.OrientationLock.PORTRAIT_UP
           );
@@ -21,12 +20,10 @@ export default function HomePage({ navigation }) {
       };
 
       lockOrientation();
-
-      // Libera a orientação quando a tela perde o foco
       return () => {
         ScreenOrientation.unlockAsync();
       };
-    }, []) // O array vazio garante que isso será chamado apenas uma vez por foco
+    }, [])
   );
 
   const {
@@ -38,7 +35,6 @@ export default function HomePage({ navigation }) {
     setFrequenciaCorte,
   } = useContext(DataContext);
 
-  // Definindo 'senoidal' como valor padrão para tipoOnda
   useEffect(() => {
     if (!tipoOnda) {
       setTipoOnda("senoidal");
@@ -85,7 +81,7 @@ export default function HomePage({ navigation }) {
         onValueChange={(itemValue) => setTipoOnda(itemValue)}
         style={styles.picker}
       >
-        <Picker.Item label="Senoidal" value="senoidal" />
+        <Picker.Item label="Senoide Retificada" value="senoidal" />
         <Picker.Item label="Quadrada" value="quadrada" />
         <Picker.Item label="Triangular" value="triangular" />
         <Picker.Item label="Dente de Serra" value="dente_de_serra" />
@@ -111,31 +107,3 @@ export default function HomePage({ navigation }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: "#f8f8f8",
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 5,
-    marginTop: 20,
-  },
-  picker: {
-    height: 50,
-    backgroundColor: "#e0e0e0",
-    borderRadius: 5,
-  },
-  input: {
-    height: 50,
-    borderColor: "#ccc",
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    marginTop: 5,
-    backgroundColor: "#fff",
-  },
-});

@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { Text, View, TouchableOpacity, Alert } from "react-native";
+import { View, Text, Alert, ScrollView } from "react-native";
 import { useEffect, useContext, useState, useCallback } from "react";
 import * as ScreenOrientation from "expo-screen-orientation";
 import styles from "./styles.js";
@@ -50,13 +50,6 @@ export default function DataImputScreen({ navigation }) {
         "Por favor, preencha o tipo de onda e a frequência fundamental."
       );
     }
-
-    return () => {
-      console.log(
-        "Finalizando tela: Tela de entrada de dados para efetuar os cálculos"
-      );
-      ScreenOrientation.unlockAsync();
-    };
   }, [frequenciaFundamental, tipoOnda]);
 
   useEffect(() => {
@@ -134,7 +127,6 @@ export default function DataImputScreen({ navigation }) {
         );
       }
 
-      // Atualizar os estados de coordY e coordX após o loop
       setCoordY(novasCoordY);
       setCoordX(novasCoordX);
     } catch (e) {
@@ -193,40 +185,49 @@ export default function DataImputScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      {coordX.length > 0 && coordY.length > 0 && (
-        <LineChart
-          data={{
-            labels: coordX,
-            datasets: [
-              {
-                data: coordY,
-                withDots: true,
-                lineColor: "transparent",
-              },
-            ],
-          }}
-          width={800}
-          height={300}
-          chartConfig={{
-            backgroundColor: "#ffffff",
-            backgroundGradientFrom: "#ffffff",
-            backgroundGradientTo: "#ffffff",
-            color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`,
-            labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-            style: { borderRadius: 16 },
-          }}
-          style={{ marginVertical: 8 }}
-          withVerticalLabels
-          withShadow
-          withInnerLines
-          withOuterLines={false}
-          withVerticalLines={false}
-          withHorizontalLines={false}
-          xLabelsOffset={-5}
-        />
-      )}
+    <ScrollView contentContainerStyle={styles.scrollView}>
+      <View style={styles.container}>
+        {coordX.length > 0 && coordY.length > 0 && (
+          <>
+            <Text style={styles.chartTitle}>{tipoOnda}</Text>
+            <LineChart
+              data={{
+                labels: coordX,
+                datasets: [
+                  {
+                    data: coordY,
+                    withDots: true,
+                    lineColor: "#4e73df",
+                  },
+                ],
+              }}
+              width={700}
+              height={300}
+              chartConfig={{
+                backgroundColor: "#1f1f1f",
+                backgroundGradientFrom: "#2d2d2d",
+                backgroundGradientTo: "#2d2d2d",
+                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                style: {
+                  borderRadius: 16,
+                  marginLeft: 20,
+                  marginRight: 20,
+                },
+              }}
+              style={styles.chart}
+              withVerticalLabels
+              withShadow
+              withInnerLines
+              withOuterLines={false}
+              withVerticalLines={false}
+              withHorizontalLines={false}
+              xLabelsOffset={-5}
+            />
+          </>
+        )}
+      </View>
       <StatusBar style="auto" />
-    </View>
+    </ScrollView>
   );
 }

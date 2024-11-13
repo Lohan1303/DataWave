@@ -112,17 +112,21 @@ export default function TimeDomaOutputScreen({ navigation }) {
                 },
               ],
             }}
-            width={800}
+            width={700}
             height={300}
             chartConfig={{
-              backgroundColor: "#ffffff",
-              backgroundGradientFrom: "#ffffff",
-              backgroundGradientTo: "#ffffff",
-              color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`,
-              labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-              style: { borderRadius: 16 },
+              backgroundColor: "#1f1f1f",
+              backgroundGradientFrom: "#2d2d2d",
+              backgroundGradientTo: "#2d2d2d",
+              color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+              labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+              style: {
+                borderRadius: 16,
+                marginLeft: 20,
+                marginRight: 20,
+              },
             }}
-            style={{ marginVertical: 8 }}
+            style={styles.chart}
             withVerticalLabels
             withShadow
             withInnerLines
